@@ -67,7 +67,7 @@ public class RangerClass extends PvPClass {
                     if (e instanceof LivingEntity) {
                         LivingEntity le = (LivingEntity) e;
                         le.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 100, 0));
-                        le.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 0));
+                        le.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 30, 0));
                     }
                 }
                 if (sortedEntities.size() > 0){

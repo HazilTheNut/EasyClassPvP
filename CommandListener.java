@@ -44,6 +44,11 @@ public class CommandListener implements CommandExecutor {
                 case "vote":
                     break;
                 case "leave":
+                    GamePlayer player = manager.getPlayerFromRoster(commandSender.getName());
+                    if (player != null) {
+                        manager.exitPlayer(player);
+                        commandSender.sendMessage("§a[ECP]§d Leaving game...");
+                    }
                     break;
                 case "debug":
                     if (commandSender.isOp()){
