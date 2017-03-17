@@ -1,9 +1,6 @@
 package Game.Classes;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -69,11 +66,15 @@ public class RangerClass extends PvPClass {
                 for (Entity e : sortedEntities) {
                     if (e instanceof LivingEntity) {
                         LivingEntity le = (LivingEntity) e;
-                        le.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 40, 0));
-                        le.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 40, 0));
+                        le.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 100, 0));
+                        le.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 0));
                     }
                 }
-                if (sortedEntities.size() > 0) trapActive = false;
+                if (sortedEntities.size() > 0){
+                    trapActive = false;
+                    trapLocation.getWorld().playSound(trapLocation, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1.2f);
+                    trapLocation.getWorld().spawnParticle(Particle.SPELL, trapLocation.add(0, .25, 0), 40, 1, .1, 1, 0);
+                }
             }
         }
     }
