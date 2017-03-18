@@ -84,8 +84,8 @@ public class GameManager {
     private void emptyQueues(){
         processingQueues = true;
         for (GamePlayer player : playerRemoveQueue){
+            if (player != null) player.departPlayer();
             if (playerRoster.containsValue(player)) playerRoster.remove(player.getPlayerName(), player);
-            player.departPlayer();
         }
         playerRemoveQueue.clear();
         for (GamePlayer player : playerAddQueue){
@@ -110,7 +110,7 @@ public class GameManager {
     public void printRoster(CommandSender sender){
         for (int ii = 0; ii < playerRoster.keySet().size(); ii++){
             String key = (String)playerRoster.keySet().toArray()[ii];
-            sender.sendMessage(key);
+            sender.sendMessage(" " + key);
         }
     }
 

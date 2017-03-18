@@ -1,19 +1,24 @@
 import Game.GameManager;
 import Game.GamePlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 /**
  * Created by Jared on 3/8/2017.
  */
 public class CommandListener implements CommandExecutor {
     private GameManager manager;
+    private EasyClassPvPMain main;
 
-    public CommandListener(GameManager gameManager){
+    public CommandListener(GameManager gameManager, EasyClassPvPMain mainClass){
+        main = mainClass;
         manager = gameManager;
     }
 
@@ -31,7 +36,7 @@ public class CommandListener implements CommandExecutor {
                             if (player != null) {
                                 manager.assignClass(player, strings[1]);
                             } else {
-                                commandSender.sendMessage("§cError: You are §onot§r§c playing the PvP game right now!");
+                                commandSender.sendMessage("§cError: You are not playing the PvP game right now!");
                             }
                         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
                             e.printStackTrace();
@@ -52,17 +57,54 @@ public class CommandListener implements CommandExecutor {
                     break;
                 case "debug":
                     if (commandSender.isOp()){
-                        commandSender.sendMessage("DEBUG INFO:");
+                        commandSender.sendMessage("PLAYER ROSTER:");
                         manager.printRoster(commandSender);
                     } else {
-                        commandSender.sendMessage("Access denied!");
+                        commandSender.sendMessage("§a[ECP]§c Access denied!");
                     }
+                    break;
                 case "add":
                     if (commandSender.isOp() && strings.length == 2){
                         Player toAdd = commandSender.getServer().getPlayer(strings[1]);
                         manager.addPlayerToRoster(toAdd);
                         commandSender.sendMessage(String.format("§bPlayer \'%1$s\' added to roster!", strings[1]));
                     }
+                    break;
+                case "createmap":
+                    if (!commandSender.isOp()){
+                        commandSender.sendMessage("§a[ECP]§c Access denied!");
+                        break;
+                    }
+                    if (strings.length != 8){
+                        commandSender.sendMessage("§a[ECP]§c Error: Incorrect Usage: §7/ecp createmap <Map Name> <Red Spawn X> <Red Spawn Y> <Red Spawn Z> <Blue Spawn X> <Blue Spawn Y> <Blue Spawn Z>");
+                        break;
+                    }
+                    main.getConfig().addDefault("Maps." + strings[1] + ".redX", Integer.valueOf(strings[2]));
+                    main.getConfig().addDefault("Maps." + strings[1] + ".redY", Integer.valueOf(strings[3]));
+                    main.getConfig().addDefault("Maps." + strings[1] + ".redZ", Integer.valueOf(strings[4]));
+                    main.getConfig().addDefault("Maps." + strings[1] + ".blueX", Integer.valueOf(strings[5]));
+                    main.getConfig().addDefault("Maps." + strings[1] + ".blueY", Integer.valueOf(strings[6]));
+                    main.getConfig().addDefault("Maps." + strings[1] + ".blueZ", Integer.valueOf(strings[7]));
+                    main.getConfig().addDefault("Maps." + strings[1] + ".isActive", true);
+                    main.saveConfig();
+                    commandSender.sendMessage("§a[ECP]§e Map §f" + strings[1] + "§e created!");
+                    break;
+                case "delmap":
+                    if (!commandSender.isOp()){
+                        commandSender.sendMessage("§a[ECP]§c Access denied!");
+                        break;
+                    }
+                    if (strings.length != 2){
+                        commandSender.sendMessage("§a[ECP]§c Error: Incorrect Usage: §7/ecp delmap <Map Name>");
+                        break;
+                    }
+                    //boolean success = false;
+                    if (main.getConfig().contains("Maps." + strings[1])) {
+                        main.getConfig().set("Maps." + strings[1] + ".isActive", false);
+                    }
+                    else commandSender.sendMessage("§a[ECP]§c Detection of Map §f" + strings[1] + "§c failed! (Path: Maps." + strings[1] + ")");
+                    //if (!success) commandSender.sendMessage("§a[ECP]§c Deletion of Map §f" + strings[1] + "§c failed!");
+                    break;
                 default:
                     break;
             }
