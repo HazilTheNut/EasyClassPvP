@@ -150,6 +150,15 @@ public class GameManager {
         recipient.sendMessage(manifest);
     }
 
+    public ArrayList<String> getClassNameRoster(){
+        Set<String> keys = classMap.keySet();
+        ArrayList<String> translatedKeys = new ArrayList<>();
+        for (String s : keys){
+            translatedKeys.add(s);
+        }
+        return translatedKeys;
+    }
+
     public boolean isOnOtherTeam(Entity e, GamePlayer player2){
         if (!(e instanceof Player)) return true;
         if (redTeam.hasEntry(e.getName()) && redTeam.hasEntry(player2.getPlayerName())) return false;

@@ -7,10 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
+
+import java.util.List;
 
 /**
  * Created by Jared on 3/11/2017.
@@ -89,6 +88,4 @@ public class PvPEventListener implements Listener {
         GamePlayer gamePlayer = manager.getPlayerFromRoster(e.getPlayer().getName());
         manager.exitPlayer(gamePlayer);
     }
-
-
 }
