@@ -17,10 +17,12 @@ public class EasyClassPvPMain extends JavaPlugin{
 
         //PLUGIN DATA
         getConfig().options().copyDefaults(true);
-        getConfig().addDefault("Lobby.Lobby Corner1", "n");
-        getConfig().addDefault("Lobby.Lobby Corner2", "n");
-        getConfig().set("Lobby.Lobby Corner1","0,0");
-        getConfig().set("Lobby.Lobby Corner2","1,1");
+        getConfig().addDefault("Lobby.Lobby Corner1.x", 0);
+        getConfig().addDefault("Lobby.Lobby Corner1.y", 0);
+        getConfig().addDefault("Lobby.Lobby Corner2.x", 2);
+        getConfig().addDefault("Lobby.Lobby Corner2.y", 2);
+        getConfig().addDefault("Lobby.Lobby Spawn.x", 1);
+        getConfig().addDefault("Lobby.Lobby Spawn.y", 1);
         saveConfig();
     }
 }

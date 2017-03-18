@@ -87,7 +87,7 @@ public class CommandListener implements CommandExecutor {
                     main.getConfig().addDefault("Maps." + strings[1] + ".blueZ", Integer.valueOf(strings[7]));
                     main.getConfig().addDefault("Maps." + strings[1] + ".isActive", true);
                     main.saveConfig();
-                    commandSender.sendMessage("§a[ECP]§e Map §f" + strings[1] + "§e created!");
+                    commandSender.sendMessage("§a[ECP]§e Map §f" + strings[1] + "§e created! §7(Path: Maps." + strings[1] + ")");
                     break;
                 case "delmap":
                     if (!commandSender.isOp()){
@@ -100,9 +100,11 @@ public class CommandListener implements CommandExecutor {
                     }
                     //boolean success = false;
                     if (main.getConfig().contains("Maps." + strings[1])) {
-                        main.getConfig().set("Maps." + strings[1] + ".isActive", false);
+                        main.getConfig().set("Maps." + strings[1], null);
+                        commandSender.sendMessage("§a[ECP]§e Deletion of Map §f" + strings[1] + "§e successful! §7(Path: Maps." + strings[1] + ")");
+                        main.saveConfig();
                     }
-                    else commandSender.sendMessage("§a[ECP]§c Detection of Map §f" + strings[1] + "§c failed! (Path: Maps." + strings[1] + ")");
+                    else commandSender.sendMessage("§a[ECP]§c Detection of Map §f" + strings[1] + "§c failed! §7(Path: Maps." + strings[1] + ")");
                     //if (!success) commandSender.sendMessage("§a[ECP]§c Deletion of Map §f" + strings[1] + "§c failed!");
                     break;
                 default:
