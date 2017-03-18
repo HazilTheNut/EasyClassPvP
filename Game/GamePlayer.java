@@ -35,11 +35,17 @@ public class GamePlayer {
     }
 
     void setPickedClass(PvPClass picked){
-        pickedClass = picked;
-        pickedClass.setPlayer(player);
-        pickedClass.loadKit();
-        pickedClass.ability1_cd = 2;
-        pickedClass.ability2_cd = 2;
+        if (pickedClass == null || pickedClass.inSpawn) {
+            pickedClass = picked;
+            pickedClass.setPlayer(player);
+            pickedClass.loadKit();
+            pickedClass.ability1_cd = 2;
+            pickedClass.ability2_cd = 2;
+            String className = picked.getClass().getSimpleName();
+            player.sendMessage("§a[ECP]§d Class Picked: " + className.substring(0, className.length() - 5));
+        } else {
+            player.sendMessage("§a[ECP]§c You've left the spawn! §oYou'll have to die if you want to change classes");
+        }
     }
 
     Player getPlayer(){ return player;}

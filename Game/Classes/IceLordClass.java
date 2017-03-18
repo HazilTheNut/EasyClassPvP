@@ -54,7 +54,8 @@ public class IceLordClass extends PvPClass {
         spawnLoc.setY(spawnLoc.getY() + 1);
         player.getLocation().getWorld().spawnParticle(Particle.BLOCK_CRACK, spawnLoc, 50, 0.6, 0.5, 0.6, new MaterialData(Material.ICE));
         player.getWorld().playSound(spawnLoc, Sound.BLOCK_GLASS_BREAK, 5f, 1.25f);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 30, 0));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 0));
+        player.removePotionEffect(PotionEffectType.SLOW);
     }
 
     @Override

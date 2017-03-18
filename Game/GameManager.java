@@ -28,6 +28,9 @@ public class GameManager {
     public Team redTeam;
     public Team blueTeam;
 
+    private int gameTimer = 0;
+    private int totalGameTime = 120000;
+
     private boolean processingQueues = false;
 
     public GameManager(){
@@ -131,9 +134,8 @@ public class GameManager {
                     player.setPickedClass(newClass);
                 } catch (NullPointerException e) {
                     player.getPlayer().sendMessage("§a[ECP]§c Uh oh! An internal problem occurred trying to set your class! :(");
-                } finally {
-                    player.getPlayer().sendMessage("§a[ECP]§d Class Picked: " + className);
                 }
+                //player.getPlayer().sendMessage("§a[ECP]§d Class Picked: " + className);
         } catch (NullPointerException e){
             player.getPlayer().sendMessage("§a[ECP]§c Error: Class does not exist!");
             printClassOptions(player.getPlayer());

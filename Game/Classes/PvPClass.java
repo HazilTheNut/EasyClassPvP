@@ -24,6 +24,8 @@ public class PvPClass {
 
     private float timeAmount = 0.05f;
 
+    public boolean inSpawn = true;
+
     int ability1_cdflash = 0;
     int ability2_cdflash = 0;
 
@@ -31,8 +33,6 @@ public class PvPClass {
 
     public boolean ability1IsRightClick = true;
     public boolean weaponCancellable = true;
-
-    private boolean armorNotLoadedYet = true;
 
     Player player;
     GameManager manager;
@@ -58,16 +58,16 @@ public class PvPClass {
             specialTick();
             countdownAbility1();
             countdownAbility2();
-            if (armorNotLoadedYet) {
-                player.removePotionEffect(PotionEffectType.INVISIBILITY);
-                loadArmor();
-                armorNotLoadedYet = false;
-            }
             if (invincbilityPeriod > 0) {
                 player.setInvulnerable(true);
                 invincbilityPeriod--;
             } else {
                 player.setInvulnerable(false);
+            }
+            if (inSpawn) player.setInvulnerable(true);
+            if (inSpawn && player.getLocation().getBlock().getType().equals(Material.CARPET)) {
+                inSpawn = false;
+                player.sendMessage("§a[ECP]§7 Exiting spawn");
             }
         }
     }
@@ -77,9 +77,12 @@ public class PvPClass {
     public void setManager(GameManager gameManager) {manager = gameManager;}
 
     public void loadKit(){
+        player.removePotionEffect(PotionEffectType.INVISIBILITY);
+        player.getInventory().clear();
         player.getInventory().setItem(0, weapon);
         showCooldownItem(1, ability1_cd);
         showCooldownItem(2, ability2_cd);
+        loadArmor();
     }
 
     void loadArmor(){ /*Override, loads armor onto char*/}

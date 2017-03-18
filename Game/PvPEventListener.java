@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 
 import java.util.List;
@@ -87,5 +88,14 @@ public class PvPEventListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent e){
         GamePlayer gamePlayer = manager.getPlayerFromRoster(e.getPlayer().getName());
         manager.exitPlayer(gamePlayer);
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e){
+        if (e.getEntity() != null){
+            GamePlayer gamePlayer = manager.getPlayerFromRoster(e.getEntity().getName());
+            if (gamePlayer.getPickedClass() != null) gamePlayer.getPickedClass().inSpawn = true;
+            gamePlayer.getPlayer().sendMessage("§a[ECP]§7 Returning to spawn...");
+        }
     }
 }
