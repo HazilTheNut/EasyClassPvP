@@ -22,7 +22,6 @@ public class PvPEventListener implements Listener {
         manager = gameManager;
     }
 
-
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent e){
         GamePlayer gamePlayer = manager.getPlayerFromRoster(e.getPlayer().getName());

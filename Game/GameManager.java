@@ -84,7 +84,7 @@ public class GameManager {
     private void emptyQueues(){
         processingQueues = true;
         for (GamePlayer player : playerRemoveQueue){
-            if (playerRoster.containsValue(player)) playerRoster.remove(player);
+            if (playerRoster.containsValue(player)) playerRoster.remove(player.getPlayerName(), player);
             player.departPlayer();
         }
         playerRemoveQueue.clear();

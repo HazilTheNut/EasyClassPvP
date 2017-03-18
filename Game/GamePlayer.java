@@ -17,11 +17,13 @@ public class GamePlayer {
 
     GamePlayer(Player play){
         player = play;
-        originalInv = player.getInventory().getContents();
-        originalArmor = player.getInventory().getArmorContents();
-        originalExtras = player.getInventory().getExtraContents();
-        player.getInventory().clear();
-        player.sendMessage("§a[ECP]§7 Your previous inventory has been saved.");
+        if (player != null) {
+            originalInv = player.getInventory().getContents();
+            originalArmor = player.getInventory().getArmorContents();
+            originalExtras = player.getInventory().getExtraContents();
+            player.getInventory().clear();
+            player.sendMessage("§a[ECP]§7 Your previous inventory has been saved.");
+        }
     }
 
     String getPlayerName(){
