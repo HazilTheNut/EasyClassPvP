@@ -1,14 +1,12 @@
 import Game.GameManager;
 import Game.GamePlayer;
-import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 
 /**
  * Created by Jared on 3/8/2017.
@@ -107,15 +105,54 @@ public class CommandListener implements CommandExecutor {
                     else commandSender.sendMessage("§a[ECP]§c Detection of Map §f" + strings[1] + "§c failed! §7(Path: Maps." + strings[1] + ")");
                     //if (!success) commandSender.sendMessage("§a[ECP]§c Deletion of Map §f" + strings[1] + "§c failed!");
                     break;
-                default:
+                case "start":
+                    if (!commandSender.isOp()){
+                        commandSender.sendMessage("§a[ECP]§c Access denied!");
+                        break;
+                    }
+                    if (strings.length != 2){
+                        commandSender.sendMessage("§a[ECP]§c Error: Incorrect Usage: §7/ecp start <Map Name>");
+                        break;
+                    }
+                    manager.startGame(strings[1]);
                     break;
+                case "setworld":
+                    if (!commandSender.isOp()){
+                        commandSender.sendMessage("§a[ECP]§c Access denied!");
+                        break;
+                    }
+                    if (commandSender instanceof Player){
+                        manager.gameWorld = ((Player)commandSender).getLocation().getWorld();
+                        commandSender.sendMessage("§a[ECP]§e Set game world to §f'" + manager.gameWorld.getName() + "'§e");
+                    } else {
+                        commandSender.sendMessage("§a[ECP]§c You aren't a player, dummy! I can't figure out what world you live in!");
+                    }
+                    break;
+                case "setlobbyspawn":
+                    if (!commandSender.isOp()){
+                        commandSender.sendMessage("§a[ECP]§c Access denied!");
+                        break;
+                    }
+                    if (commandSender instanceof Player){
+                        Location spawnLoc = ((Player)commandSender).getLocation();
+                        main.getConfig().set("Lobby.Spawn.x", spawnLoc.getX());
+                        main.getConfig().set("Lobby.Spawn.y", spawnLoc.getY());
+                        main.getConfig().set("Lobby.Spawn.z", spawnLoc.getZ());
+                        main.saveConfig();
+                        commandSender.sendMessage("§a[ECP]§e Set lobby spawn to your current location");
+                    } else {
+                        commandSender.sendMessage("§a[ECP]§c You aren't a player, dummy! I can't figure out where you are!");
+                    }
+                    break;
+                default:
+                    return false;
             }
         }
         return true;
     }
 
     private void givePluginInfo(CommandSender sender){
-        sender.sendMessage("§6§n[ Easy Class PvP Info ]");
+        sender.sendMessage("§6[ Easy Class PvP Info ]");
         sender.sendMessage("§b/ecp pick <class name>§r - Picks a class");
         sender.sendMessage("§b/ecp vote <map name>§r - Votes for a map between matches");
         sender.sendMessage("§b/ecp leave§r - Leaves the game");

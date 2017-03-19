@@ -4,9 +4,12 @@ import Game.Classes.*;
 import Game.Projectiles.Projectile;
 import Game.Projectiles.ProjectileEffect;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Team;
 
 import java.lang.reflect.InvocationTargetException;
@@ -28,8 +31,13 @@ public class GameManager {
     public Team redTeam;
     public Team blueTeam;
 
+    public Location redSpawn;
+    public Location blueSpawn;
+    public World gameWorld;
+
     private int gameTimer = 0;
-    private int totalGameTime = 120000;
+    //private int totalGameTime = 120000;
+    private int totalGameTime = 600;
 
     private boolean processingQueues = false;
 
@@ -81,14 +89,18 @@ public class GameManager {
                 }
             }
             emptyQueues();
+            if (gameTimer > 0) gameTimer--;
+            if (gameTimer == 0) endGame();
         }, 0, 1);
     }
 
     private void emptyQueues(){
         processingQueues = true;
         for (GamePlayer player : playerRemoveQueue){
-            if (player != null) player.departPlayer();
-            if (playerRoster.containsValue(player)) playerRoster.remove(player.getPlayerName(), player);
+            if (player != null){
+                player.departPlayer();
+                if (playerRoster.containsValue(player)) playerRoster.remove(player.getPlayerName(), player);
+            }
         }
         playerRemoveQueue.clear();
         for (GamePlayer player : playerAddQueue){
@@ -135,7 +147,6 @@ public class GameManager {
                 } catch (NullPointerException e) {
                     player.getPlayer().sendMessage("§a[ECP]§c Uh oh! An internal problem occurred trying to set your class! :(");
                 }
-                //player.getPlayer().sendMessage("§a[ECP]§d Class Picked: " + className);
         } catch (NullPointerException e){
             player.getPlayer().sendMessage("§a[ECP]§c Error: Class does not exist!");
             printClassOptions(player.getPlayer());
@@ -177,7 +188,45 @@ public class GameManager {
         projAddQueue.add(newProj);
     }
 
-    public void removeProjectile(Projectile toRemove){
+    private void removeProjectile(Projectile toRemove){
         projRemoveQueue.add(toRemove);
+    }
+
+    public void startGame(String mapName){
+        String fullPath = "Maps." + mapName;
+        Plugin serverPlugin = Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP");
+        if (serverPlugin.getConfig().contains(fullPath)) {
+            redSpawn  = new Location(gameWorld, (int) serverPlugin.getConfig().get(fullPath + ".redX"), (int) serverPlugin.getConfig().get(fullPath + ".redY"), (int) serverPlugin.getConfig().get(fullPath + ".redZ"));
+            blueSpawn = new Location(gameWorld, (int) serverPlugin.getConfig().get(fullPath + ".blueX"), (int) serverPlugin.getConfig().get(fullPath + ".blueY"), (int) serverPlugin.getConfig().get(fullPath + ".blueZ"));
+        }
+        ArrayList<Player> players = (ArrayList<Player>)gameWorld.getPlayers();
+        clearTeams();
+        boolean goToRedTeam = false;
+        for (Player player : players) {
+            if (goToRedTeam) {
+                redTeam.addEntry(player.getName());
+                player.teleport(redSpawn);
+            }
+            else {
+                blueTeam.addEntry(player.getName());
+                player.teleport(blueSpawn);
+            }
+            goToRedTeam = !goToRedTeam;
+        }
+        gameTimer = totalGameTime;
+    }
+
+    private void clearTeams(){
+        for (String name : redTeam.getEntries()){
+            redTeam.removeEntry(name);
+        }
+        for (String name : blueTeam.getEntries()){
+            blueTeam.removeEntry(name);
+        }
+    }
+
+    private void endGame(){
+        //ArrayList<Player> players = (ArrayList<Player>)gameWorld.getPlayers();
+        clearTeams();
     }
 }

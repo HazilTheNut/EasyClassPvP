@@ -1,6 +1,7 @@
 package Game;
 
 import Game.Classes.PvPClass;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 /**
@@ -14,6 +15,7 @@ public class GamePlayer {
     private ItemStack[] originalInv;
     private ItemStack[] originalArmor;
     private ItemStack[] originalExtras;
+    private Location originalSpawn;
 
     GamePlayer(Player play){
         player = play;
@@ -22,6 +24,7 @@ public class GamePlayer {
             originalArmor = player.getInventory().getArmorContents();
             originalExtras = player.getInventory().getExtraContents();
             player.getInventory().clear();
+            originalSpawn = player.getBedSpawnLocation();
             player.sendMessage("§a[ECP]§7 Your previous inventory has been saved.");
         }
     }
