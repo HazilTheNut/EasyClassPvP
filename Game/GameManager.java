@@ -37,7 +37,6 @@ public class GameManager {
 
     private int gameTimer = 0;
     public int totalGameTime = 120000;
-    //private int totalGameTime = 600;
 
     private boolean processingQueues = false;
 
@@ -233,29 +232,30 @@ public class GameManager {
     }
 
     public void startGame(String mapName){
-        String fullPath = "Maps." + mapName;
-        Plugin serverPlugin = Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP");
-        if (serverPlugin.getConfig().contains(fullPath)) {
-            redSpawn  = new Location(gameWorld, (int) serverPlugin.getConfig().get(fullPath + ".redX"), (int) serverPlugin.getConfig().get(fullPath + ".redY"), (int) serverPlugin.getConfig().get(fullPath + ".redZ"));
-            blueSpawn = new Location(gameWorld, (int) serverPlugin.getConfig().get(fullPath + ".blueX"), (int) serverPlugin.getConfig().get(fullPath + ".blueY"), (int) serverPlugin.getConfig().get(fullPath + ".blueZ"));
-        }
-        ArrayList<Player> players = (ArrayList<Player>)gameWorld.getPlayers();
-        clearTeams();
-        boolean goToRedTeam = false;
-        for (Player player : players) {
-            if (goToRedTeam) {
-                redTeam.addEntry(player.getName());
-                player.teleport(redSpawn);
+        if (gameWorld != null) {
+            String fullPath = "Maps." + mapName;
+            Plugin serverPlugin = Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP");
+            if (serverPlugin.getConfig().contains(fullPath)) {
+                redSpawn = new Location(gameWorld, (int) serverPlugin.getConfig().get(fullPath + ".redX"), (int) serverPlugin.getConfig().get(fullPath + ".redY"), (int) serverPlugin.getConfig().get(fullPath + ".redZ"));
+                blueSpawn = new Location(gameWorld, (int) serverPlugin.getConfig().get(fullPath + ".blueX"), (int) serverPlugin.getConfig().get(fullPath + ".blueY"), (int) serverPlugin.getConfig().get(fullPath + ".blueZ"));
             }
-            else {
-                blueTeam.addEntry(player.getName());
-                player.teleport(blueSpawn);
+            ArrayList<Player> players = (ArrayList<Player>) gameWorld.getPlayers();
+            clearTeams();
+            boolean goToRedTeam = false;
+            for (Player player : players) {
+                if (goToRedTeam) {
+                    redTeam.addEntry(player.getName());
+                    player.teleport(redSpawn);
+                } else {
+                    blueTeam.addEntry(player.getName());
+                    player.teleport(blueSpawn);
+                }
+                goToRedTeam = !goToRedTeam;
+                player.sendMessage("§a[ECP]§c§l Game Starting... (Time: " + (float)totalGameTime / 1200 + "min)");
+                addPlayerToRoster(player);
             }
-            goToRedTeam = !goToRedTeam;
-            player.sendMessage("§a[ECP]§c§l Game Starting... (Time: " + (float)totalGameTime / 1200 + "min)");
-            addPlayerToRoster(player);
+            gameTimer = totalGameTime;
         }
-        gameTimer = totalGameTime;
     }
 
     private void clearTeams(){

@@ -152,7 +152,13 @@ public class CommandListener implements CommandExecutor {
                         break;
                     }
                     try {
-                        manager.totalGameTime = Integer.valueOf(strings[1]) * 1200;
+                        int timeAmountTicks = (int)(Float.valueOf(strings[1]) * 1200);
+                        manager.totalGameTime = timeAmountTicks;
+                        main.getConfig().set("Game.GameLength", timeAmountTicks);
+                        main.saveConfig();
+                        int minutes = timeAmountTicks / 1200;
+                        int seconds = (timeAmountTicks % 1200) / 20;
+                        commandSender.sendMessage(String.format("§a[ECP]§e Game time set to §f%1$d:%2$02d", minutes, seconds));
                     } catch (NumberFormatException e){
                         commandSender.sendMessage("§a[ECP]§c Error: Incorrect Usage: §7/ecp setgametime <Time (min)>");
                     }
