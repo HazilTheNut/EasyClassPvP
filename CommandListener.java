@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.TreeMap;
 
 /**
  * Created by Jared on 3/8/2017.
@@ -57,6 +58,12 @@ public class CommandListener implements CommandExecutor {
                     if (commandSender.isOp()){
                         commandSender.sendMessage("PLAYER ROSTER:");
                         manager.printRoster(commandSender);
+                        /*
+                        commandSender.sendMessage("MAP ROSTER:");
+                        for(String key : main.getConfig().getConfigurationSection("Maps").getKeys(false)){
+                            commandSender.sendMessage(key);
+                        }
+                        */
                     } else {
                         commandSender.sendMessage("§a[ECP]§c Access denied!");
                     }
@@ -119,6 +126,7 @@ public class CommandListener implements CommandExecutor {
                         break;
                     }
                     manager.startGame(strings[1]);
+                    commandSender.sendMessage("§a[ECP]§e Starting game at map §f" + strings[1]);
                     break;
                 case "setlobbyspawn":
                     if (!commandSender.isOp()){

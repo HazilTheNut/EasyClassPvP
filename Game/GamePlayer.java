@@ -17,6 +17,7 @@ public class GamePlayer {
     private ItemStack[] originalArmor;
     private ItemStack[] originalExtras;
     private Location originalSpawn;
+    public Location gameSpawn;
 
     GamePlayer(Player play){
         player = play;

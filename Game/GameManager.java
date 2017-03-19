@@ -246,7 +246,7 @@ public class GameManager {
                 if (goToRedTeam) {
                     redTeam.addEntry(player.getName());
                     player.teleport(redSpawn);
-                    player.setBedSpawnLocation(redSpawn);
+
                 } else {
                     blueTeam.addEntry(player.getName());
                     player.teleport(blueSpawn);
@@ -254,7 +254,15 @@ public class GameManager {
                 }
                 goToRedTeam = !goToRedTeam;
                 player.sendMessage("§a[ECP]§c§l Game Starting... (Time: " + (float)totalGameTime / 1200 + "min)");
+                player.sendMessage("§a[ECP]§7use '/ecp pick <Class Name>' to pick a class");
                 addPlayerToRoster(player);
+            }
+            emptyQueues();
+            for (int ii = 0; ii < playerRoster.keySet().size(); ii++){
+                String key = (String)playerRoster.keySet().toArray()[ii];
+                GamePlayer player = playerRoster.get(key);
+                if (redTeam.hasEntry(player.getPlayerName())) player.gameSpawn = redSpawn;
+                else player.gameSpawn = blueSpawn;
             }
             gameTimer = totalGameTime;
         }
