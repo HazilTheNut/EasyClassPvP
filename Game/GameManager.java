@@ -36,8 +36,8 @@ public class GameManager {
     public World gameWorld;
 
     private int gameTimer = 0;
-    //private int totalGameTime = 120000;
-    private int totalGameTime = 600;
+    public int totalGameTime = 120000;
+    //private int totalGameTime = 600;
 
     private boolean processingQueues = false;
 
@@ -89,9 +89,42 @@ public class GameManager {
                 }
             }
             emptyQueues();
+            checkGameTime();
             if (gameTimer >= 0) gameTimer--;
             if (gameTimer == 0) endGame();
         }, 0, 1);
+    }
+
+    private void checkGameTime(){
+        if (gameTimer % 6000 == 0){
+            broadcastToRoster(gameTimer / 6000 + "min remaining");
+        }
+        if (gameTimer == 3600){
+            broadcastToRoster("3min remaining");
+        }
+        if (gameTimer == 2400){
+            broadcastToRoster("2min remaining");
+        }
+        if (gameTimer == 1200){
+            broadcastToRoster("1min remaining");
+        }
+        if (gameTimer == 600){
+            broadcastToRoster("30 seconds remaining!");
+        }
+        if (gameTimer < 200 && gameTimer % 20 == 0){
+            if (gameTimer > 20)
+                broadcastToRoster(gameTimer / 20 + " seconds remaining!");
+            else
+                broadcastToRoster("1 second remains!");
+        }
+    }
+
+    private void broadcastToRoster(String s){
+        for (int ii = 0; ii < playerRoster.keySet().size(); ii++){
+            String key = (String)playerRoster.keySet().toArray()[ii];
+            GamePlayer player = playerRoster.get(key);
+            player.getPlayer().sendMessage("§a[ECP]§6 " + s);
+        }
     }
 
     private void emptyQueues(){
@@ -180,10 +213,9 @@ public class GameManager {
         return translatedKeys;
     }
 
-    public boolean isOnOtherTeam(Entity e, GamePlayer player2){
+    public boolean isOnOtherTeam(Entity e, GamePlayer player2) {
         if (!(e instanceof Player)) return true;
-        if (redTeam.hasEntry(e.getName()) && redTeam.hasEntry(player2.getPlayerName())) return false;
-        return !(blueTeam.hasEntry(e.getName()) && blueTeam.hasEntry(player2.getPlayerName()));
+        return redTeam.hasEntry(e.getName()) ^ redTeam.hasEntry(player2.getPlayerName()) || (blueTeam.hasEntry(e.getName()) ^ blueTeam.hasEntry(player2.getPlayerName()));
     }
 
     public void createProjectile(Player shooter, ProjectileEffect effect, int travelDist){

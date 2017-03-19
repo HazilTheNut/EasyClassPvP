@@ -77,15 +77,19 @@ public class CommandListener implements CommandExecutor {
                         commandSender.sendMessage("§a[ECP]§c Error: Incorrect Usage: §7/ecp createmap <Map Name> <Red Spawn X> <Red Spawn Y> <Red Spawn Z> <Blue Spawn X> <Blue Spawn Y> <Blue Spawn Z>");
                         break;
                     }
-                    main.getConfig().addDefault("Maps." + strings[1] + ".redX", Integer.valueOf(strings[2]));
-                    main.getConfig().addDefault("Maps." + strings[1] + ".redY", Integer.valueOf(strings[3]));
-                    main.getConfig().addDefault("Maps." + strings[1] + ".redZ", Integer.valueOf(strings[4]));
-                    main.getConfig().addDefault("Maps." + strings[1] + ".blueX", Integer.valueOf(strings[5]));
-                    main.getConfig().addDefault("Maps." + strings[1] + ".blueY", Integer.valueOf(strings[6]));
-                    main.getConfig().addDefault("Maps." + strings[1] + ".blueZ", Integer.valueOf(strings[7]));
-                    main.getConfig().addDefault("Maps." + strings[1] + ".isActive", true);
-                    main.saveConfig();
-                    commandSender.sendMessage("§a[ECP]§e Map §f" + strings[1] + "§e created! §7(Path: Maps." + strings[1] + ")");
+                    try {
+                        main.getConfig().addDefault("Maps." + strings[1] + ".redX", Integer.valueOf(strings[2]));
+                        main.getConfig().addDefault("Maps." + strings[1] + ".redY", Integer.valueOf(strings[3]));
+                        main.getConfig().addDefault("Maps." + strings[1] + ".redZ", Integer.valueOf(strings[4]));
+                        main.getConfig().addDefault("Maps." + strings[1] + ".blueX", Integer.valueOf(strings[5]));
+                        main.getConfig().addDefault("Maps." + strings[1] + ".blueY", Integer.valueOf(strings[6]));
+                        main.getConfig().addDefault("Maps." + strings[1] + ".blueZ", Integer.valueOf(strings[7]));
+                        main.getConfig().addDefault("Maps." + strings[1] + ".isActive", true);
+                        main.saveConfig();
+                        commandSender.sendMessage("§a[ECP]§e Map §f" + strings[1] + "§e created! §7(Path: Maps." + strings[1] + ")");
+                    } catch (NumberFormatException e){
+                        commandSender.sendMessage("§a[ECP]§c Error: Incorrect Usage: §7/ecp createmap <Map Name> <Red Spawn X> <Red Spawn Y> <Red Spawn Z> <Blue Spawn X> <Blue Spawn Y> <Blue Spawn Z>");
+                    }
                     break;
                 case "delmap":
                     if (!commandSender.isOp()){
@@ -121,6 +125,10 @@ public class CommandListener implements CommandExecutor {
                         commandSender.sendMessage("§a[ECP]§c Access denied!");
                         break;
                     }
+                    if (strings.length != 1){
+                        commandSender.sendMessage("§a[ECP]§c Error: Incorrect Usage: §7/ecp setlobbyspawn");
+                        break;
+                    }
                     if (commandSender instanceof Player){
                         Location spawnLoc = ((Player)commandSender).getLocation();
                         main.getConfig().set("Lobby.Spawn.x", (int)spawnLoc.getX());
@@ -134,6 +142,20 @@ public class CommandListener implements CommandExecutor {
                         commandSender.sendMessage("§a[ECP]§c You aren't a player, dummy! I can't figure out where you are!");
                     }
                     break;
+                case "setgametime":
+                    if (!commandSender.isOp()){
+                        commandSender.sendMessage("§a[ECP]§c Access denied!");
+                        break;
+                    }
+                    if (strings.length != 2){
+                        commandSender.sendMessage("§a[ECP]§c Error: Incorrect Usage: §7/ecp setgametime <Time (min)>");
+                        break;
+                    }
+                    try {
+                        manager.totalGameTime = Integer.valueOf(strings[1]) * 1200;
+                    } catch (NumberFormatException e){
+                        commandSender.sendMessage("§a[ECP]§c Error: Incorrect Usage: §7/ecp setgametime <Time (min)>");
+                    }
                 default:
                     return false;
             }

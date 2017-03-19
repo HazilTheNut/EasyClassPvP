@@ -77,9 +77,9 @@ public class GrieferClass extends PvPClass {
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 5f, 0.9f);
         Entity[] dmgList = getNearbyEntities(player.getLocation(), 2);
         for (Entity e : dmgList){
-            if (manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName()))){
+            if (manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName())) && e instanceof Damageable){
                 Damageable toHit = (Damageable)e;
-                toHit.damage(6, e);
+                toHit.damage(6);
             }
         }
     }
