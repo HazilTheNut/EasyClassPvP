@@ -9,10 +9,12 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Team;
 
 import java.lang.reflect.InvocationTargetException;
+import java.rmi.registry.LocateRegistry;
 import java.util.*;
 
 /**
@@ -27,6 +29,8 @@ public class GameManager {
     private ArrayList<Projectile> projAddQueue = new ArrayList<>();
     private ArrayList<GamePlayer> playerRemoveQueue = new ArrayList<>();
     private ArrayList<Projectile> projRemoveQueue = new ArrayList<>();
+
+    private ArrayList<FrozenPlayer> frozenPlayers = new ArrayList<>(); //"Frozen player" are players who left the server in the midst of a game
 
     public Team redTeam;
     public Team blueTeam;
@@ -154,10 +158,19 @@ public class GameManager {
         playerRemoveQueue.add(leaving);
     }
 
+    public void registerFrozenPlayer(GamePlayer gonePlayer) {
+        playerRemoveQueue.add(gonePlayer);
+        frozenPlayers.add(gonePlayer.createFrozen());
+    }
+
     public void printRoster(CommandSender sender){
         for (int ii = 0; ii < playerRoster.keySet().size(); ii++){
             String key = (String)playerRoster.keySet().toArray()[ii];
             sender.sendMessage(" " + key);
+        }
+        sender.sendMessage("FROZEN:");
+        for (FrozenPlayer frozenPlayer : frozenPlayers){
+            sender.sendMessage(" " + frozenPlayer.playerName);
         }
     }
 
@@ -291,4 +304,24 @@ public class GameManager {
             play.teleport(lobbyLoc);
         }
     }
-}
+
+    void flushFrozenPlayer(Player joining){
+        FrozenPlayer frozen = null;
+        for (FrozenPlayer test : frozenPlayers){
+            if (test.playerName.equals(joining.getName())) frozen = test;
+        }
+        if (frozen != null) {
+            System.out.println("Player " + joining.getName() + "unfreezing [ECP]");
+            Plugin serverPlugin = Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP");
+            int lobbyX = serverPlugin.getConfig().getInt("Lobby.Spawn.x");
+            int lobbyY = serverPlugin.getConfig().getInt("Lobby.Spawn.y");
+            int lobbyZ = serverPlugin.getConfig().getInt("Lobby.Spawn.z");
+            Location lobbyLoc = new Location(gameWorld, lobbyX, lobbyY, lobbyZ);
+            frozen.imprintOntoPlayer(joining);
+            joining.teleport(lobbyLoc);
+            joining.getPlayer().sendMessage("§a[ECP]§7 Returning to lobby...");
+            frozenPlayers.remove(frozen);
+            }
+        }
+    }
+

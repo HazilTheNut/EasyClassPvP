@@ -67,13 +67,14 @@ public class PvPEventListener implements Listener {
             Player gotHit = (Player)e.getEntity();
             GamePlayer gamePlayer = manager.getPlayerFromRoster(gotHit.getName());
             if (gamePlayer != null && gamePlayer.gamePlayerValid()){
-                gamePlayer.getPickedClass().onReceiveDamage();
                 if (gamePlayer.getPlayer().getHealth() - e.getDamage() < 1){ //If the player were to die
                     gamePlayer.getPickedClass().inSpawn = true;
                     gamePlayer.getPlayer().sendMessage("§a[ECP]§7 Returning to spawn...");
                     gamePlayer.getPlayer().teleport(gamePlayer.gameSpawn);
                     gamePlayer.getPlayer().setHealth(20);
                     e.setCancelled(true);
+                } else {
+                    gamePlayer.getPickedClass().onReceiveDamage();
                 }
             }
         }
@@ -94,6 +95,14 @@ public class PvPEventListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e){
         GamePlayer gamePlayer = manager.getPlayerFromRoster(e.getPlayer().getName());
-        manager.exitPlayer(gamePlayer);
+        if (gamePlayer != null){
+            manager.registerFrozenPlayer(gamePlayer);
+            System.out.println("Player " + gamePlayer.getPlayerName() + "registered as frozen [ECP]");
+        }
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e){
+        manager.flushFrozenPlayer(e.getPlayer());
     }
 }

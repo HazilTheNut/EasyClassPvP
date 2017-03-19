@@ -68,4 +68,8 @@ public class GamePlayer {
         player.setGameMode(GameMode.SURVIVAL);
         player.sendMessage("§a[ECP]§e Your inventory has been restored!");
     }
+
+    FrozenPlayer createFrozen(){
+        return new FrozenPlayer(originalInv, originalArmor, originalExtras, originalSpawn, getPlayerName());
+    }
 }
