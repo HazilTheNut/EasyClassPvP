@@ -1,6 +1,7 @@
 package Game;
 
 import Game.Classes.PvPClass;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -72,6 +73,8 @@ public class PvPEventListener implements Listener {
                     gamePlayer.getPlayer().sendMessage("§a[ECP]§7 Returning to spawn...");
                     gamePlayer.getPlayer().teleport(gamePlayer.gameSpawn);
                     gamePlayer.getPlayer().setHealth(20);
+                    gamePlayer.getPlayer().getWorld().spawnParticle(Particle.LAVA, gamePlayer.getPlayer().getLocation(), 10, .2, .2, .2, 0);
+                    gamePlayer.getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, gamePlayer.getPlayer().getLocation(), 10, .2, .2, .2, 0.1);
                     e.setCancelled(true);
                 } else {
                     gamePlayer.getPickedClass().onReceiveDamage();

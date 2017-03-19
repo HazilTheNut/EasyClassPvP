@@ -70,6 +70,9 @@ public class PvPClass {
                 inSpawn = false;
                 player.sendMessage("§a[ECP]§7 Exiting spawn");
             }
+            if (player.getLocation().getBlock().getType().equals(Material.GOLD_PLATE)){
+                manager.healthPickup(player);
+            }
         }
     }
 

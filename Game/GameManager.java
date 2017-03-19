@@ -5,16 +5,17 @@ import Game.Projectiles.Projectile;
 import Game.Projectiles.ProjectileEffect;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
 
 import java.lang.reflect.InvocationTargetException;
-import java.rmi.registry.LocateRegistry;
 import java.util.*;
 
 /**
@@ -26,12 +27,16 @@ public class GameManager {
     private ArrayList<Projectile> flyingProjectiles = new ArrayList<>();
 
     private ArrayList<GamePlayer> playerAddQueue = new ArrayList<>();
-    private ArrayList<Projectile> projAddQueue = new ArrayList<>();
     private ArrayList<GamePlayer> playerRemoveQueue = new ArrayList<>();
+
+    private ArrayList<Projectile> projAddQueue = new ArrayList<>();
     private ArrayList<Projectile> projRemoveQueue = new ArrayList<>();
 
     private ArrayList<FrozenPlayer> frozenPlayers = new ArrayList<>(); //"Frozen player" are players who left the server in the midst of a game
 
+    private ArrayList<RechargingHealthPack> chargingHP = new ArrayList<>();
+    private ArrayList<RechargingHealthPack> HPAdd = new ArrayList<>();
+    private ArrayList<RechargingHealthPack> HPRemove = new ArrayList<>();
     public Team redTeam;
     public Team blueTeam;
 
@@ -76,26 +81,37 @@ public class GameManager {
                     e.printStackTrace();
                 }
             }
-            for (int ii = 0; ii < playerRoster.keySet().size(); ii++){
-                String key = (String)playerRoster.keySet().toArray()[ii];
-                GamePlayer player = playerRoster.get(key);
-                PvPClass playerClass = player.getPickedClass();
-                if (playerClass != null){
-                    playerClass.receiveTick();
-                }
-            }
-            for (Projectile projectile : flyingProjectiles){
-                projectile.move();
-                if (!projectile.loc.getBlock().isEmpty() || projectile.travelDist == 0 || projectile.attemptHit()){
-                    projectile.endEffect();
-                    removeProjectile(projectile);
-                }
-            }
-            emptyQueues();
-            checkGameTime();
-            if (gameTimer >= 0) gameTimer--;
-            if (gameTimer == 0) endGame();
+            gameLoop();
         }, 0, 1);
+    }
+
+    private void gameLoop(){
+        for (int ii = 0; ii < playerRoster.keySet().size(); ii++){
+            String key = (String)playerRoster.keySet().toArray()[ii];
+            GamePlayer player = playerRoster.get(key);
+            PvPClass playerClass = player.getPickedClass();
+            if (playerClass != null){
+                playerClass.receiveTick();
+            }
+        }
+        for (Projectile projectile : flyingProjectiles){
+            projectile.move();
+            if (!projectile.loc.getBlock().isEmpty() || projectile.travelDist == 0 || projectile.attemptHit()){
+                projectile.endEffect();
+                removeProjectile(projectile);
+            }
+        }
+        for (RechargingHealthPack pack : chargingHP){
+            pack.receiveTick();
+        }
+        chargingHP.removeAll(HPRemove);
+        chargingHP.addAll(HPAdd);
+        HPAdd.clear();
+        HPRemove.clear();
+        emptyQueues();
+        checkGameTime();
+        if (gameTimer >= 0) gameTimer--;
+        if (gameTimer == 0) endGame();
     }
 
     private void checkGameTime(){
@@ -303,6 +319,7 @@ public class GameManager {
             play.sendMessage("§a[ECP]§c§l GAME END");
             play.teleport(lobbyLoc);
         }
+        for (RechargingHealthPack hp : chargingHP) hp.respawn();
     }
 
     void flushFrozenPlayer(Player joining){
@@ -321,7 +338,36 @@ public class GameManager {
             joining.teleport(lobbyLoc);
             joining.getPlayer().sendMessage("§a[ECP]§7 Returning to lobby...");
             frozenPlayers.remove(frozen);
-            }
         }
     }
+
+    public void healthPickup(Player player){
+        player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 1));
+        player.setFoodLevel(20);
+        HPAdd.add(new RechargingHealthPack(player.getLocation()));
+        player.getLocation().getBlock().setType(Material.IRON_PLATE);
+    }
+
+    private class RechargingHealthPack{
+        Location packLoc;
+        int timeRemaining;
+
+        private RechargingHealthPack(Location loc){
+            timeRemaining = 200;
+            packLoc = loc;
+        }
+
+        private void receiveTick(){
+            if (timeRemaining == 0){
+                respawn();
+            }
+            timeRemaining--;
+        }
+
+        private void respawn(){
+            packLoc.getBlock().setType(Material.GOLD_PLATE);
+            HPRemove.add(this);
+        }
+    }
+}
 

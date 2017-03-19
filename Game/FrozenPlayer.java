@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 /**
 * Created by Jared on 3/19/2017.
 */
-class FrozenPlayer {
+public class FrozenPlayer {
 
     private ItemStack[] originalInv;
     private ItemStack[] originalArmor;
