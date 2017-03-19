@@ -246,9 +246,11 @@ public class GameManager {
                 if (goToRedTeam) {
                     redTeam.addEntry(player.getName());
                     player.teleport(redSpawn);
+                    player.setBedSpawnLocation(redSpawn);
                 } else {
                     blueTeam.addEntry(player.getName());
                     player.teleport(blueSpawn);
+                    player.setBedSpawnLocation(blueSpawn);
                 }
                 goToRedTeam = !goToRedTeam;
                 player.sendMessage("§a[ECP]§c§l Game Starting... (Time: " + (float)totalGameTime / 1200 + "min)");

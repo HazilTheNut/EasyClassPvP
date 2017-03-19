@@ -1,6 +1,7 @@
 package Game;
 
 import Game.Classes.PvPClass;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -25,6 +26,7 @@ public class GamePlayer {
             originalExtras = player.getInventory().getExtraContents();
             player.getInventory().clear();
             originalSpawn = player.getBedSpawnLocation();
+            player.setGameMode(GameMode.ADVENTURE);
             player.sendMessage("§a[ECP]§7 Your previous inventory has been saved.");
         }
     }
@@ -57,10 +59,12 @@ public class GamePlayer {
 
     boolean gamePlayerValid(){ return pickedClass != null && player != null;}
 
-    public void departPlayer(){
+    void departPlayer(){
         player.getInventory().setContents(originalInv);
         player.getInventory().setArmorContents(originalArmor);
         player.getInventory().setExtraContents(originalExtras);
+        player.setBedSpawnLocation(originalSpawn);
+        player.setGameMode(GameMode.SURVIVAL);
         player.sendMessage("§a[ECP]§e Your inventory has been restored!");
     }
 }
