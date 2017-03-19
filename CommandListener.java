@@ -116,18 +116,6 @@ public class CommandListener implements CommandExecutor {
                     }
                     manager.startGame(strings[1]);
                     break;
-                case "setworld":
-                    if (!commandSender.isOp()){
-                        commandSender.sendMessage("§a[ECP]§c Access denied!");
-                        break;
-                    }
-                    if (commandSender instanceof Player){
-                        manager.gameWorld = ((Player)commandSender).getLocation().getWorld();
-                        commandSender.sendMessage("§a[ECP]§e Set game world to §f'" + manager.gameWorld.getName() + "'§e");
-                    } else {
-                        commandSender.sendMessage("§a[ECP]§c You aren't a player, dummy! I can't figure out what world you live in!");
-                    }
-                    break;
                 case "setlobbyspawn":
                     if (!commandSender.isOp()){
                         commandSender.sendMessage("§a[ECP]§c Access denied!");
@@ -135,9 +123,11 @@ public class CommandListener implements CommandExecutor {
                     }
                     if (commandSender instanceof Player){
                         Location spawnLoc = ((Player)commandSender).getLocation();
-                        main.getConfig().set("Lobby.Spawn.x", spawnLoc.getX());
-                        main.getConfig().set("Lobby.Spawn.y", spawnLoc.getY());
-                        main.getConfig().set("Lobby.Spawn.z", spawnLoc.getZ());
+                        main.getConfig().set("Lobby.Spawn.x", (int)spawnLoc.getX());
+                        main.getConfig().set("Lobby.Spawn.y", (int)spawnLoc.getY());
+                        main.getConfig().set("Lobby.Spawn.z", (int)spawnLoc.getZ());
+                        main.getConfig().set("Game.World", spawnLoc.getWorld().getName());
+                        manager.gameWorld = spawnLoc.getWorld();
                         main.saveConfig();
                         commandSender.sendMessage("§a[ECP]§e Set lobby spawn to your current location");
                     } else {

@@ -89,7 +89,7 @@ public class GameManager {
                 }
             }
             emptyQueues();
-            if (gameTimer > 0) gameTimer--;
+            if (gameTimer >= 0) gameTimer--;
             if (gameTimer == 0) endGame();
         }, 0, 1);
     }
@@ -131,6 +131,14 @@ public class GameManager {
 
     public void addPlayerToRoster(Player toAdd){
         playerAddQueue.add(new GamePlayer(toAdd));
+    }
+
+    private void clearRoster(){
+        for (int ii = 0; ii < playerRoster.keySet().size(); ii++){
+            String key = (String)playerRoster.keySet().toArray()[ii];
+            GamePlayer player = playerRoster.get(key);
+            playerRemoveQueue.add(player);
+        }
     }
 
     public GamePlayer getPlayerFromRoster(String s){
@@ -212,6 +220,8 @@ public class GameManager {
                 player.teleport(blueSpawn);
             }
             goToRedTeam = !goToRedTeam;
+            player.sendMessage("§a[ECP]§c§l Game Starting... (Time: " + (float)totalGameTime / 1200 + "min)");
+            addPlayerToRoster(player);
         }
         gameTimer = totalGameTime;
     }
@@ -226,7 +236,17 @@ public class GameManager {
     }
 
     private void endGame(){
-        //ArrayList<Player> players = (ArrayList<Player>)gameWorld.getPlayers();
         clearTeams();
+        clearRoster();
+        Plugin serverPlugin = Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP");
+        int lobbyX = serverPlugin.getConfig().getInt("Lobby.Spawn.x");
+        int lobbyY = serverPlugin.getConfig().getInt("Lobby.Spawn.y");
+        int lobbyZ = serverPlugin.getConfig().getInt("Lobby.Spawn.z");
+        Location lobbyLoc = new Location(gameWorld, lobbyX, lobbyY, lobbyZ);
+        ArrayList<Player> players = (ArrayList<Player>)gameWorld.getPlayers();
+        for (Player play : players){
+            play.sendMessage("§a[ECP]§c§l GAME END");
+            play.teleport(lobbyLoc);
+        }
     }
 }

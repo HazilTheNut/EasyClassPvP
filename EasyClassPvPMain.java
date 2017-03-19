@@ -1,5 +1,6 @@
 import Game.PvPEventListener;
 import Game.GameManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -29,6 +30,10 @@ public class EasyClassPvPMain extends JavaPlugin{
             getConfig().addDefault("Lobby.Spawn.y", 1);
         if (!getConfig().contains("Lobby.Spawn.z"))
             getConfig().addDefault("Lobby.Spawn.z", 1);
+        if (getConfig().contains("Game.World")){
+            String worldName = (String)getConfig().get("Game.World");
+            manager.gameWorld = Bukkit.getWorld(worldName);
+        }
         saveConfig();
     }
 }
