@@ -2,6 +2,7 @@ package Game;
 
 import Game.Classes.PvPClass;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -71,10 +72,11 @@ public class PvPEventListener implements Listener {
                 if (gamePlayer.getPlayer().getHealth() - e.getDamage() < 1){ //If the player were to die
                     gamePlayer.getPickedClass().inSpawn = true;
                     gamePlayer.getPlayer().sendMessage("§a[ECP]§7 Returning to spawn...");
-                    gamePlayer.getPlayer().teleport(gamePlayer.gameSpawn);
-                    gamePlayer.getPlayer().setHealth(20);
                     gamePlayer.getPlayer().getWorld().spawnParticle(Particle.LAVA, gamePlayer.getPlayer().getLocation(), 10, .2, .2, .2, 0);
                     gamePlayer.getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, gamePlayer.getPlayer().getLocation(), 10, .2, .2, .2, 0.1);
+                    gamePlayer.getPlayer().getWorld().playSound(gamePlayer.getPlayer().getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 1f, 1f);
+                    gamePlayer.getPlayer().teleport(gamePlayer.gameSpawn);
+                    gamePlayer.getPlayer().setHealth(20);
                     e.setCancelled(true);
                 } else {
                     gamePlayer.getPickedClass().onReceiveDamage();

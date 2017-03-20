@@ -47,6 +47,9 @@ public class GameManager {
     private int gameTimer = 0;
     public int totalGameTime = 120000;
 
+    private int voteCountdown = 0;
+    private boolean voting = false;
+
     private boolean processingQueues = false;
 
     public GameManager(){
@@ -112,6 +115,11 @@ public class GameManager {
         checkGameTime();
         if (gameTimer >= 0) gameTimer--;
         if (gameTimer == 0) endGame();
+        if (voteCountdown > 0) voteCountdown--;
+        if (voteCountdown == 0 && voting){
+            voting = false;
+            compileVotes();
+        }
     }
 
     private void checkGameTime(){
@@ -260,11 +268,70 @@ public class GameManager {
         projRemoveQueue.add(toRemove);
     }
 
+    public int getGameTimer() { return gameTimer; }
+
+    private ArrayList<Vote> votingList = new ArrayList<>();
+
+    public void receiveVote(String mapVote, Player voter) {
+        if (gameWorld != null) {
+            if (gameTimer < 0 && gameWorld.getPlayers().contains(voter)) {
+                if (!voting) {
+                    voting = true;
+                    voteCountdown = 60;
+                    for (Player inLobby : gameWorld.getPlayers())
+                        inLobby.sendMessage("§a[ECP]§e Voting begins! do §b/ecp vote <Map Name>§e to cast a vote! Game starts in §a30§a seconds!");
+                }
+                boolean alreadyVoted = false;
+                for (Vote v : votingList) {
+                    if (voter.getName().equals(v.playerName)) {
+                        alreadyVoted = true;
+                        v.mapName = mapVote;
+                        break;
+                    }
+                }
+                if (!alreadyVoted) {
+                    votingList.add(new Vote(voter.getName(), mapVote));
+                }
+            } else if (!gameWorld.getPlayers().contains(voter)) {
+                voter.sendMessage("§a[ECP]§c Error: You are not in the PvP world!");
+            } else {
+                voter.sendMessage("§a[ECP]§c Error: A game is currently in session!");
+            }
+        }
+    }
+
+    private void compileVotes(){
+        HashMap<String, Integer> mapMap = new HashMap<>();
+        ArrayList<String> mapList = new ArrayList<>();
+        mapList.addAll(Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP").getConfig().getConfigurationSection("Maps").getKeys(false));
+        for (String mapName : mapList) mapMap.put(mapName, 0); //Add all maps to map
+        for (Vote vote : votingList) {
+            if (mapMap.containsKey(vote.mapName))
+                mapMap.replace(vote.mapName, 1); //Add up votes
+            else
+                System.out.println("Invalid vote: " + vote.mapName);
+        }
+        int topVal = -1;
+        String topMap = "";
+        Random tieBreaker = new Random();
+        for (String mapKey : mapMap.keySet()){
+            if (mapMap.get(mapKey) > topVal || (mapMap.get(mapKey) == topVal && tieBreaker.nextBoolean())){
+                topVal = mapMap.get(mapKey);
+                topMap = mapKey;
+            }
+        }
+        votingList.clear();
+        startGame(topMap);
+    }
+
     public void startGame(String mapName){
         if (gameWorld != null) {
+            for (Player player : gameWorld.getPlayers()) player.sendMessage("§a[ECP]§e Map Selected: §f" + mapName);
             String fullPath = "Maps." + mapName;
             Plugin serverPlugin = Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP");
-            if (serverPlugin.getConfig().contains(fullPath)) {
+            ArrayList<String> maps = new ArrayList<>();
+            maps.addAll(serverPlugin.getConfig().getConfigurationSection("Maps").getKeys(false));
+            if (maps.contains(mapName)) {
                 redSpawn = new Location(gameWorld, (int) serverPlugin.getConfig().get(fullPath + ".redX"), (int) serverPlugin.getConfig().get(fullPath + ".redY"), (int) serverPlugin.getConfig().get(fullPath + ".redZ"));
                 blueSpawn = new Location(gameWorld, (int) serverPlugin.getConfig().get(fullPath + ".blueX"), (int) serverPlugin.getConfig().get(fullPath + ".blueY"), (int) serverPlugin.getConfig().get(fullPath + ".blueZ"));
             }
@@ -282,8 +349,9 @@ public class GameManager {
                     player.setBedSpawnLocation(blueSpawn);
                 }
                 goToRedTeam = !goToRedTeam;
+                player.sendMessage("§a[ECP]§e Map Selected: §f" + mapName);
                 player.sendMessage("§a[ECP]§c§l Game Starting... (Time: " + (float)totalGameTime / 1200 + "min)");
-                player.sendMessage("§a[ECP]§7use '/ecp pick <Class Name>' to pick a class");
+                player.sendMessage("§a[ECP]§7 use §b/ecp pick <Class Name>§7 to pick a class");
                 addPlayerToRoster(player);
             }
             emptyQueues();
@@ -367,6 +435,16 @@ public class GameManager {
         private void respawn(){
             packLoc.getBlock().setType(Material.GOLD_PLATE);
             HPRemove.add(this);
+        }
+    }
+
+    private class Vote {
+        private String playerName;
+        private String mapName;
+
+        private Vote(String name, String map){
+            playerName = name;
+            mapName = map;
         }
     }
 }

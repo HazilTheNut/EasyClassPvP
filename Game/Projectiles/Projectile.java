@@ -24,7 +24,6 @@ public class Projectile {
         loc.setY(loc.getY()-0.2f);
         projEffect = effect;
         travelVector = loc.getDirection().normalize();
-        //travelVector.multiply(1.0f);
     }
 
     public void move(){
@@ -34,15 +33,15 @@ public class Projectile {
     }
 
     public boolean attemptHit(){
-        boolean successful = false;
+        boolean shouldStop = false;
         Collection<Entity> nearbyEntities = loc.getWorld().getNearbyEntities(loc, 0.4, 0.4, 0.4);
         for (Entity e : nearbyEntities){
             if (!(e instanceof Player && creatorTeam != null && creatorTeam.hasEntry(e.getName())) && !e.isInvulnerable()){
                 projEffect.applyEffect(e);
-                successful = !projEffect.piercing;
+                shouldStop = !projEffect.piercing;
             }
         }
-        return successful;
+        return shouldStop;
     }
 
     public void endEffect(){ projEffect.finalEffect(loc); }

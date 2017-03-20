@@ -14,7 +14,7 @@ public class EasyClassPvPMain extends JavaPlugin{
         getServer().getPluginCommand("ecp").setExecutor(new CommandListener(manager, this));
         PvPEventListener listener = new PvPEventListener(manager);
         getServer().getPluginManager().registerEvents(listener, this);
-        getServer().getPluginCommand("ecp").setTabCompleter(new CommandTabCompletion(manager));
+        getServer().getPluginCommand("ecp").setTabCompleter(new CommandTabCompletion(manager, this));
 
         //PLUGIN DATA
         getConfig().options().copyDefaults(true);

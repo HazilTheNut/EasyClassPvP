@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.TreeMap;
+import java.util.ArrayList;
 
 /**
  * Created by Jared on 3/8/2017.
@@ -46,6 +46,22 @@ public class CommandListener implements CommandExecutor {
                     }
                     break;
                 case "vote":
+                    if (commandSender instanceof Player) {
+                        if (strings.length != 2){
+                            commandSender.sendMessage("§a[ECP]§c Error: Incorrect Usage: §7/ecp vote <Map Name>");
+                            break;
+                        }
+                        ArrayList<String> maps = new ArrayList<>();
+                        maps.addAll(main.getConfig().getConfigurationSection("Maps").getKeys(false));
+                        if (maps.contains(strings[1]) && manager.getGameTimer() <= 0) {
+                            manager.receiveVote(strings[1], (Player)commandSender);
+                            commandSender.sendMessage("§a[ECP]§6 Voted for §e" + strings[1]);
+                        } else if (manager.getGameTimer() > 0){
+                            commandSender.sendMessage("§a[ECP]§c Error: A game is currently in session! (Time remaining: " + (float)manager.getGameTimer() / 1200 + "min)");
+                        } else {
+                            commandSender.sendMessage("§a[ECP]§c Error: That map doesn't exist!");
+                        }
+                    }
                     break;
                 case "leave":
                     GamePlayer player = manager.getPlayerFromRoster(commandSender.getName());
@@ -58,12 +74,11 @@ public class CommandListener implements CommandExecutor {
                     if (commandSender.isOp()){
                         commandSender.sendMessage("PLAYER ROSTER:");
                         manager.printRoster(commandSender);
-                        /*
                         commandSender.sendMessage("MAP ROSTER:");
-                        for(String key : main.getConfig().getConfigurationSection("Maps").getKeys(false)){
-                            commandSender.sendMessage(key);
-                        }
-                        */
+                        ArrayList<String> maps = new ArrayList<>();
+                        maps.addAll(main.getConfig().getConfigurationSection("Maps").getKeys(false));
+                        for(String mapName : maps) commandSender.sendMessage(" " + mapName);
+
                     } else {
                         commandSender.sendMessage("§a[ECP]§c Access denied!");
                     }
@@ -91,9 +106,8 @@ public class CommandListener implements CommandExecutor {
                         main.getConfig().addDefault("Maps." + strings[1] + ".blueX", Integer.valueOf(strings[5]));
                         main.getConfig().addDefault("Maps." + strings[1] + ".blueY", Integer.valueOf(strings[6]));
                         main.getConfig().addDefault("Maps." + strings[1] + ".blueZ", Integer.valueOf(strings[7]));
-                        main.getConfig().addDefault("Maps." + strings[1] + ".isActive", true);
                         main.saveConfig();
-                        commandSender.sendMessage("§a[ECP]§e Map §f" + strings[1] + "§e created! §7(Path: Maps." + strings[1] + ")");
+                        commandSender.sendMessage("§a[ECP]§e Map §f" + strings[1] + "§e created! §8(Path: Maps." + strings[1] + ")");
                     } catch (NumberFormatException e){
                         commandSender.sendMessage("§a[ECP]§c Error: Incorrect Usage: §7/ecp createmap <Map Name> <Red Spawn X> <Red Spawn Y> <Red Spawn Z> <Blue Spawn X> <Blue Spawn Y> <Blue Spawn Z>");
                     }
@@ -110,7 +124,7 @@ public class CommandListener implements CommandExecutor {
                     //boolean success = false;
                     if (main.getConfig().contains("Maps." + strings[1])) {
                         main.getConfig().set("Maps." + strings[1], null);
-                        commandSender.sendMessage("§a[ECP]§e Deletion of Map §f" + strings[1] + "§e successful! §7(Path: Maps." + strings[1] + ")");
+                        commandSender.sendMessage("§a[ECP]§e Deletion of Map §f" + strings[1] + "§e successful! §8(Path: Maps." + strings[1] + ")");
                         main.saveConfig();
                     }
                     else commandSender.sendMessage("§a[ECP]§c Detection of Map §f" + strings[1] + "§c failed! §7(Path: Maps." + strings[1] + ")");
@@ -126,7 +140,7 @@ public class CommandListener implements CommandExecutor {
                         break;
                     }
                     manager.startGame(strings[1]);
-                    commandSender.sendMessage("§a[ECP]§e Starting game at map §f" + strings[1]);
+                    //commandSender.sendMessage("§a[ECP]§e Starting game at map §f" + strings[1]);
                     break;
                 case "setlobbyspawn":
                     if (!commandSender.isOp()){

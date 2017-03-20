@@ -14,9 +14,13 @@ import java.util.List;
  */
 public class CommandTabCompletion implements TabCompleter {
 
-    GameManager manager;
+    private GameManager manager;
+    private EasyClassPvPMain main;
 
-    CommandTabCompletion(GameManager gameManager) {manager = gameManager; }
+    CommandTabCompletion(GameManager gameManager, EasyClassPvPMain mainClass) {
+        manager = gameManager;
+        main = mainClass;
+    }
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
@@ -25,7 +29,9 @@ public class CommandTabCompletion implements TabCompleter {
             case "pick":
                 return manager.getClassNameRoster();
             case "vote":
-                return null;
+                ArrayList<String> maps = new ArrayList<>();
+                maps.addAll(main.getConfig().getConfigurationSection("Maps").getKeys(false));
+                return maps;
             case "leave":
                 return null;
             case "debug":
