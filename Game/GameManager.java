@@ -277,7 +277,7 @@ public class GameManager {
             if (gameTimer < 0 && gameWorld.getPlayers().contains(voter)) {
                 if (!voting) {
                     voting = true;
-                    voteCountdown = 60;
+                    voteCountdown = 600;
                     for (Player inLobby : gameWorld.getPlayers())
                         inLobby.sendMessage("§a[ECP]§e Voting begins! do §b/ecp vote <Map Name>§e to cast a vote! Game starts in §a30§a seconds!");
                 }
