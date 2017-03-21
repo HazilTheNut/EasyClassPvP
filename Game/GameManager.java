@@ -307,7 +307,7 @@ public class GameManager {
         for (String mapName : mapList) mapMap.put(mapName, 0); //Add all maps to map
         for (Vote vote : votingList) {
             if (mapMap.containsKey(vote.mapName))
-                mapMap.replace(vote.mapName, 1); //Add up votes
+                mapMap.replace(vote.mapName, mapMap.replace(vote.mapName, mapMap.get(vote.mapName) + 1)); //Add up votes
             else
                 System.out.println("Invalid vote: " + vote.mapName);
         }
@@ -349,7 +349,6 @@ public class GameManager {
                     player.setBedSpawnLocation(blueSpawn);
                 }
                 goToRedTeam = !goToRedTeam;
-                player.sendMessage("§a[ECP]§e Map Selected: §f" + mapName);
                 player.sendMessage("§a[ECP]§c§l Game Starting... (Time: " + (float)totalGameTime / 1200 + "min)");
                 player.sendMessage("§a[ECP]§7 use §b/ecp pick <Class Name>§7 to pick a class");
                 addPlayerToRoster(player);
@@ -376,18 +375,18 @@ public class GameManager {
 
     private void endGame(){
         clearTeams();
-        clearRoster();
         Plugin serverPlugin = Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP");
         int lobbyX = serverPlugin.getConfig().getInt("Lobby.Spawn.x");
         int lobbyY = serverPlugin.getConfig().getInt("Lobby.Spawn.y");
         int lobbyZ = serverPlugin.getConfig().getInt("Lobby.Spawn.z");
         Location lobbyLoc = new Location(gameWorld, lobbyX, lobbyY, lobbyZ);
-        ArrayList<Player> players = (ArrayList<Player>)gameWorld.getPlayers();
-        for (Player play : players){
+        for (String playerName : playerRoster.keySet()){
+            Player play = playerRoster.get(playerName).getPlayer();
             play.sendMessage("§a[ECP]§c§l GAME END");
             play.teleport(lobbyLoc);
         }
         for (RechargingHealthPack hp : chargingHP) hp.respawn();
+        clearRoster();
     }
 
     void flushFrozenPlayer(Player joining){
@@ -404,6 +403,8 @@ public class GameManager {
             Location lobbyLoc = new Location(gameWorld, lobbyX, lobbyY, lobbyZ);
             frozen.imprintOntoPlayer(joining);
             joining.teleport(lobbyLoc);
+            redTeam.removeEntry(frozen.playerName);
+            blueTeam.removeEntry(frozen.playerName);
             joining.getPlayer().sendMessage("§a[ECP]§7 Returning to lobby...");
             frozenPlayers.remove(frozen);
         }
