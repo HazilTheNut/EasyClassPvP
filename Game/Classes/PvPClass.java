@@ -55,7 +55,7 @@ public class PvPClass {
 
     public void receiveTick(){
         if (player != null) {
-            player.setFoodLevel(20);
+            player.setFoodLevel(18);
             specialTick();
             countdownAbility1();
             countdownAbility2();

@@ -3,10 +3,7 @@ package Game;
 import Game.Classes.*;
 import Game.Projectiles.Projectile;
 import Game.Projectiles.ProjectileEffect;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -39,6 +36,9 @@ public class GameManager {
     private ArrayList<RechargingHealthPack> HPRemove = new ArrayList<>();
     public Team redTeam;
     public Team blueTeam;
+
+    private int redTeamPoints = 0;
+    private int blueTeamPoints = 0;
 
     public Location redSpawn;
     public Location blueSpawn;
@@ -250,8 +250,29 @@ public class GameManager {
     }
 
     public boolean isOnOtherTeam(Entity e, GamePlayer player2) {
-        if (!(e instanceof Player)) return true;
-        return redTeam.hasEntry(e.getName()) ^ redTeam.hasEntry(player2.getPlayerName()) || (blueTeam.hasEntry(e.getName()) ^ blueTeam.hasEntry(player2.getPlayerName()));
+        return !(e instanceof Player) || redTeam.hasEntry(e.getName()) ^ redTeam.hasEntry(player2.getPlayerName()) || (blueTeam.hasEntry(e.getName()) ^ blueTeam.hasEntry(player2.getPlayerName()));
+    }
+
+    void handlePlayerDeath(GamePlayer gamePlayer){
+        gamePlayer.getPickedClass().inSpawn = true;
+        gamePlayer.getPlayer().sendMessage("§a[ECP]§7 Returning to spawn...");
+        gamePlayer.getPlayer().getWorld().spawnParticle(Particle.LAVA, gamePlayer.getPlayer().getLocation(), 10, .2, .2, .2, 0);
+        gamePlayer.getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, gamePlayer.getPlayer().getLocation(), 10, .2, .2, .2, 0.1);
+        gamePlayer.getPlayer().getWorld().playSound(gamePlayer.getPlayer().getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 1f, 1f);
+        gamePlayer.getPlayer().teleport(gamePlayer.gameSpawn);
+        gamePlayer.getPlayer().setHealth(20);
+        if (redTeam.hasEntry(gamePlayer.getPlayerName())) {
+            blueTeamPoints++;
+            broadcastToGamePlayers('9', "+1 To Blue Team §2[§9" + blueTeamPoints + "§2 - §c" + redTeamPoints + "§2]");
+        }
+        if (blueTeam.hasEntry(gamePlayer.getPlayerName())) {
+            redTeamPoints++;
+            broadcastToGamePlayers('c', "+1 To Red Team §2[§c" + redTeamPoints + "§2 - §9" + blueTeamPoints + "§2]");
+        }
+    }
+
+    private void broadcastToGamePlayers(char color, String message){
+        for (Player player : gameWorld.getPlayers()) player.sendMessage("§a[ECP] §" + color + message);
     }
 
     public void createProjectile(Player shooter, ProjectileEffect effect, int travelDist){
@@ -385,6 +406,26 @@ public class GameManager {
             play.sendMessage("§a[ECP]§c§l GAME END");
             play.teleport(lobbyLoc);
         }
+        for (Player player : gameWorld.getPlayers()){
+            player.sendMessage("§a[ECP]§6§n Summary: ");
+            player.sendMessage("§6: ");
+            if (redTeamPoints > blueTeamPoints){
+                player.sendMessage("§6: Final Score: §c" + redTeamPoints + " §6> §9" + blueTeamPoints);
+                player.sendMessage("§6: §cRed Team Wins!");
+            } else if (blueTeamPoints > redTeamPoints){
+                player.sendMessage("§6: Final Score: §9" + blueTeamPoints + " §6> §c" + redTeamPoints);
+                player.sendMessage("§6: §9Blue Team Wins!");
+            } else {
+                player.sendMessage("§6: Final Score: §9" + blueTeamPoints + " §6- §c" + redTeamPoints);
+                player.sendMessage("§6: §lTIE!");
+            }
+            player.sendMessage("§6: ");
+            player.sendMessage("§6: =================");
+            redTeamPoints = 0;
+            blueTeamPoints = 0;
+            player.setHealth(20);
+            player.setFoodLevel(20);
+        }
         for (RechargingHealthPack hp : chargingHP) hp.respawn();
         clearRoster();
     }
@@ -407,6 +448,9 @@ public class GameManager {
             blueTeam.removeEntry(frozen.playerName);
             joining.getPlayer().sendMessage("§a[ECP]§7 Returning to lobby...");
             frozenPlayers.remove(frozen);
+            joining.setGameMode(GameMode.SURVIVAL);
+            joining.setHealth(20);
+            joining.setFoodLevel(20);
         }
     }
 
