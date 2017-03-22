@@ -21,7 +21,7 @@ public class IceLordProjEffect extends ProjectileEffect{
     public void applyEffect(Entity target) {
         damageEntity(target, 4);
         LivingEntity le = (LivingEntity)target;
-        le.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1));
+        le.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 50, 1));
     }
 
     @Override

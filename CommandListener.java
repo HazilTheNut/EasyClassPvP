@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ public class CommandListener implements CommandExecutor {
                     GamePlayer player = manager.getPlayerFromRoster(commandSender.getName());
                     if (player != null) {
                         manager.exitPlayer(player);
+
                         commandSender.sendMessage("§a[ECP]§d Leaving game...");
                     }
                     break;
@@ -192,7 +194,7 @@ public class CommandListener implements CommandExecutor {
     }
 
     private void givePluginInfo(CommandSender sender){
-        sender.sendMessage("§6[ Easy Class PvP Info ]");
+        sender.sendMessage("§6[ Easy Class PvP Info ] (ver. " + main.getDescription().getVersion() + ")");
         sender.sendMessage("§b/ecp pick <class name>§r - Picks a class");
         sender.sendMessage("§b/ecp vote <map name>§r - Votes for a map between matches");
         sender.sendMessage("§b/ecp leave§r - Leaves the game");

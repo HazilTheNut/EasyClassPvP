@@ -17,6 +17,7 @@ import org.bukkit.potion.PotionEffectType;
 public class IceLordClass extends PvPClass {
 
     private short armorHealth = 0;
+    private boolean armorActive = false;
 
     public IceLordClass(){
         ability1_setcd = 5f;
@@ -30,7 +31,7 @@ public class IceLordClass extends PvPClass {
 
         ItemStack itemAb1 = new ItemStack(Material.DIAMOND, 1);
         ItemMeta ab1Meta = itemAb1.getItemMeta();
-        String[] ab1Details = {"Fires an ice blast that","deals §b4§2 damage and","slows by §b20%§2 for §b2§2 seconds"};
+        String[] ab1Details = {"Fires an ice blast that","deals §b4§2 damage and","slows by §b20%§2 for §b2.5§2 seconds"};
         writeAbilityLore("Ice Blast", ab1Meta, true, ab1Details, (int)ability1_setcd);
         itemAb1.setItemMeta(ab1Meta);
         ability1Icon = itemAb1;
@@ -56,11 +57,12 @@ public class IceLordClass extends PvPClass {
         player.getWorld().playSound(spawnLoc, Sound.BLOCK_GLASS_BREAK, 5f, 1.25f);
         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 0));
         player.removePotionEffect(PotionEffectType.SLOW);
+        armorActive = false;
     }
 
     @Override
     void specialTick(){
-        if (armorHealth > 0){
+        if (armorActive){
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 15, 0));
             player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 15, 1));
         }
@@ -69,7 +71,7 @@ public class IceLordClass extends PvPClass {
     @Override
     public void onReceiveDamage(){
         if (armorHealth > 0) armorHealth--;
-        if (armorHealth == 0){
+        if (armorHealth == 0 && armorActive){
             ability2_cd = 8f;
             showCooldownItem(2, ability2_cd);
             createArmorBreakEffect();
@@ -84,6 +86,7 @@ public class IceLordClass extends PvPClass {
     @Override
     void ability2Effect(){ //Frost Armor
         if (armorHealth < 3) {
+            armorActive = true;
             armorHealth = 3;
             ability2_setcd = 2f;
         }

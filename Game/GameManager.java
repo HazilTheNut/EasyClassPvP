@@ -158,6 +158,7 @@ public class GameManager {
         processingQueues = true;
         for (GamePlayer player : playerRemoveQueue){
             if (player != null){
+                genericPlayerExit(player.getPlayer());
                 player.departPlayer();
                 if (playerRoster.containsValue(player)) playerRoster.remove(player.getPlayerName(), player);
             }
@@ -417,7 +418,7 @@ public class GameManager {
                 player.sendMessage("§6: §9Blue Team Wins!");
             } else {
                 player.sendMessage("§6: Final Score: §9" + blueTeamPoints + " §6- §c" + redTeamPoints);
-                player.sendMessage("§6: §lTIE!");
+                player.sendMessage("§6: §l§eTIE!");
             }
             player.sendMessage("§6: ");
             player.sendMessage("§6: =================");
@@ -437,21 +438,27 @@ public class GameManager {
         }
         if (frozen != null) {
             System.out.println("Player " + joining.getName() + "unfreezing [ECP]");
-            Plugin serverPlugin = Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP");
-            int lobbyX = serverPlugin.getConfig().getInt("Lobby.Spawn.x");
-            int lobbyY = serverPlugin.getConfig().getInt("Lobby.Spawn.y");
-            int lobbyZ = serverPlugin.getConfig().getInt("Lobby.Spawn.z");
-            Location lobbyLoc = new Location(gameWorld, lobbyX, lobbyY, lobbyZ);
             frozen.imprintOntoPlayer(joining);
-            joining.teleport(lobbyLoc);
-            redTeam.removeEntry(frozen.playerName);
-            blueTeam.removeEntry(frozen.playerName);
-            joining.getPlayer().sendMessage("§a[ECP]§7 Returning to lobby...");
             frozenPlayers.remove(frozen);
-            joining.setGameMode(GameMode.SURVIVAL);
-            joining.setHealth(20);
-            joining.setFoodLevel(20);
+            genericPlayerExit(joining);
         }
+    }
+
+    private void genericPlayerExit(Player exiting){
+        exiting.setGameMode(GameMode.SURVIVAL);
+        exiting.setHealth(20);
+        exiting.setFoodLevel(20);
+        //Teleporting player to lobby
+        Plugin serverPlugin = Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP");
+        int lobbyX = serverPlugin.getConfig().getInt("Lobby.Spawn.x");
+        int lobbyY = serverPlugin.getConfig().getInt("Lobby.Spawn.y");
+        int lobbyZ = serverPlugin.getConfig().getInt("Lobby.Spawn.z");
+        Location lobbyLoc = new Location(gameWorld, lobbyX, lobbyY, lobbyZ);
+        exiting.teleport(lobbyLoc);
+        //End of lobby teleport
+        redTeam.removeEntry(exiting.getName());
+        blueTeam.removeEntry(exiting.getName());
+        exiting.getPlayer().sendMessage("§a[ECP]§7 Returning to lobby...");
     }
 
     public void healthPickup(Player player){
