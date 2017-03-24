@@ -56,7 +56,6 @@ public class CommandListener implements CommandExecutor {
                         maps.addAll(main.getConfig().getConfigurationSection("Maps").getKeys(false));
                         if (maps.contains(strings[1]) && manager.getGameTimer() <= 0) {
                             manager.receiveVote(strings[1], (Player)commandSender);
-                            commandSender.sendMessage("§a[ECP]§6 Voted for §e" + strings[1]);
                         } else if (manager.getGameTimer() > 0){
                             commandSender.sendMessage("§a[ECP]§c Error: A game is currently in session! (Time remaining: " + (float)manager.getGameTimer() / 1200 + "min)");
                         } else {

@@ -254,7 +254,7 @@ public class GameManager {
         return !(e instanceof Player) || redTeam.hasEntry(e.getName()) ^ redTeam.hasEntry(player2.getPlayerName()) || (blueTeam.hasEntry(e.getName()) ^ blueTeam.hasEntry(player2.getPlayerName()));
     }
 
-    void handlePlayerDeath(GamePlayer gamePlayer){
+    public void handlePlayerDeath(GamePlayer gamePlayer){
         gamePlayer.getPickedClass().inSpawn = true;
         gamePlayer.getPlayer().sendMessage("§a[ECP]§7 Returning to spawn...");
         gamePlayer.getPlayer().getWorld().spawnParticle(Particle.LAVA, gamePlayer.getPlayer().getLocation(), 10, .2, .2, .2, 0);
@@ -313,6 +313,9 @@ public class GameManager {
                 }
                 if (!alreadyVoted) {
                     votingList.add(new Vote(voter.getName(), mapVote));
+                    voter.sendMessage("§a[ECP]§6 Voted for §e" + mapVote);
+                } else {
+                    voter.sendMessage("§a[ECP]§6 Changed vote to §e" + mapVote);
                 }
             } else if (!gameWorld.getPlayers().contains(voter)) {
                 voter.sendMessage("§a[ECP]§c Error: You are not in the PvP world!");
@@ -326,10 +329,13 @@ public class GameManager {
         HashMap<String, Integer> mapMap = new HashMap<>();
         ArrayList<String> mapList = new ArrayList<>();
         mapList.addAll(Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP").getConfig().getConfigurationSection("Maps").getKeys(false));
-        for (String mapName : mapList) mapMap.put(mapName, 0); //Add all maps to map
+        for (String mapName : mapList) {
+            mapMap.put(mapName, 0); //Add all maps to map
+            Bukkit.broadcastMessage(mapName);
+        }
         for (Vote vote : votingList) {
             if (mapMap.containsKey(vote.mapName))
-                mapMap.replace(vote.mapName, mapMap.replace(vote.mapName, mapMap.get(vote.mapName) + 1)); //Add up votes
+                mapMap.replace(vote.mapName, mapMap.get(vote.mapName) + 1); //Add up votes
             else
                 System.out.println("Invalid vote: " + vote.mapName);
         }
@@ -341,6 +347,7 @@ public class GameManager {
                 topVal = mapMap.get(mapKey);
                 topMap = mapKey;
             }
+            Bukkit.broadcastMessage(mapKey + ": " + mapMap.get(mapKey));
         }
         votingList.clear();
         startGame(topMap);

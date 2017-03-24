@@ -1,6 +1,7 @@
 package Game.Classes;
 
 import Game.GameManager;
+import Game.GamePlayer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -8,6 +9,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
@@ -66,9 +68,16 @@ public class PvPClass {
                 player.setInvulnerable(false);
             }
             if (inSpawn) player.setInvulnerable(true);
-            if (inSpawn && player.getLocation().getBlock().getType().equals(Material.CARPET)) {
-                inSpawn = false;
-                player.sendMessage("§a[ECP]§7 Exiting spawn");
+            if (player.getLocation().getBlock().getType().equals(Material.CARPET)) {
+                if (inSpawn) {
+                    inSpawn = false;
+                    player.sendMessage("§a[ECP]§7 Exiting spawn");
+                }
+                if ((player.getLocation().getBlock().getData() == 11 && manager.redTeam.hasEntry(player.getName())) ||
+                   (player.getLocation().getBlock().getData() == 14 && manager.blueTeam.hasEntry(player.getName()))){
+                    player.damage(100);
+                    player.sendMessage("§a[ECP]§c Cannot enter other team's spawn!");
+                }
             }
             if (player.getLocation().getBlock().getType().equals(Material.GOLD_PLATE)){
                 manager.healthPickup(player);
