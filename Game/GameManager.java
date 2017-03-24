@@ -425,7 +425,7 @@ public class GameManager {
                 player.sendMessage("§6: §9Blue Team Wins!");
             } else {
                 player.sendMessage("§6: Final Score: §9" + blueTeamPoints + " §6- §c" + redTeamPoints);
-                player.sendMessage("§6: §l§eTIE!");
+                player.sendMessage("§6: §e§lTIE!");
             }
             player.sendMessage("§6: ");
             player.sendMessage("§6: =================");
@@ -455,6 +455,7 @@ public class GameManager {
         exiting.setGameMode(GameMode.SURVIVAL);
         exiting.setHealth(20);
         exiting.setFoodLevel(20);
+        for (PotionEffect pe : exiting.getActivePotionEffects()) exiting.removePotionEffect(pe.getType());
         //Teleporting player to lobby
         Plugin serverPlugin = Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP");
         int lobbyX = serverPlugin.getConfig().getInt("Lobby.Spawn.x");
