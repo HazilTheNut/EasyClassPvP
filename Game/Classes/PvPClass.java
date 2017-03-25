@@ -75,6 +75,7 @@ public class PvPClass {
                 }
                 if ((player.getLocation().getBlock().getData() == 11 && manager.redTeam.hasEntry(player.getName())) ||
                    (player.getLocation().getBlock().getData() == 14 && manager.blueTeam.hasEntry(player.getName()))){
+                    player.setInvulnerable(false);
                     player.damage(100);
                     player.sendMessage("§a[ECP]§c Cannot enter other team's spawn!");
                 }
@@ -185,24 +186,24 @@ public class PvPClass {
     }
 
     public void useAbility1(){
-        if (ability1_cd < 0.05f) {
+        if (ability1_cd < 0.05f && !inSpawn) {
             player.getInventory().setItem(0, weapon);
             ability1Effect();
             ability1_cd = ability1_setcd;
             showCooldownItem(1, ability1_cd);
-
         } else {
+            if (inSpawn) ability1_cd = 0.5f;
             ability1_cdflash = 10;
         }
-
     }
 
     public void useAbility2() {
-        if (ability2_cd < 0.05f) {
+        if (ability2_cd < 0.05f && !inSpawn) {
             ability2Effect();
             ability2_cd = ability2_setcd;
             showCooldownItem(2, ability2_cd);
         } else {
+            if (inSpawn) ability2_cd = 0.5f;
             ability2_cdflash = 10;
         }
     }
