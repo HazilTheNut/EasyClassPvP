@@ -464,6 +464,7 @@ public class GameManager {
         Location lobbyLoc = new Location(gameWorld, lobbyX, lobbyY, lobbyZ);
         exiting.teleport(lobbyLoc);
         //End of lobby teleport
+        exiting.setInvulnerable(false);
         redTeam.removeEntry(exiting.getName());
         blueTeam.removeEntry(exiting.getName());
         exiting.getPlayer().sendMessage("§a[ECP]§7 Returning to lobby...");
