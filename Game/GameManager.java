@@ -331,7 +331,7 @@ public class GameManager {
         mapList.addAll(Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP").getConfig().getConfigurationSection("Maps").getKeys(false));
         for (String mapName : mapList) {
             mapMap.put(mapName, 0); //Add all maps to map
-            Bukkit.broadcastMessage(mapName);
+            //Bukkit.broadcastMessage(mapName);
         }
         for (Vote vote : votingList) {
             if (mapMap.containsKey(vote.mapName))
@@ -347,7 +347,7 @@ public class GameManager {
                 topVal = mapMap.get(mapKey);
                 topMap = mapKey;
             }
-            Bukkit.broadcastMessage(mapKey + ": " + mapMap.get(mapKey));
+            //Bukkit.broadcastMessage(mapKey + ": " + mapMap.get(mapKey));
         }
         votingList.clear();
         startGame(topMap);

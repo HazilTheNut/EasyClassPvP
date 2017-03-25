@@ -104,4 +104,14 @@ public class PvPEventListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e){
         manager.flushFrozenPlayer(e.getPlayer());
     }
+
+    @EventHandler
+    public void preCommand(PlayerCommandPreprocessEvent e){
+        if (manager.getPlayerFromRoster(e.getPlayer().getName()) != null && !e.getPlayer().isOp()){
+            if (e.getMessage().length() > 0 && e.getMessage().substring(0,1).equals("/") && !(e.getMessage().length() >= 4 && e.getMessage().substring(0,4).equals("/ecp"))) {
+                e.getPlayer().sendMessage("§a[ECP]§c (Anti-Cheat) commands other than §6/ecp ...§c blocked!§7 Use §f/ecp leave§7 to exit the game and no longer be blocked");
+                e.setCancelled(true);
+            }
+        }
+    }
 }

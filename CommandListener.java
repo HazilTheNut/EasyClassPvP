@@ -185,6 +185,7 @@ public class CommandListener implements CommandExecutor {
                     } catch (NumberFormatException e){
                         commandSender.sendMessage("§a[ECP]§c Error: Incorrect Usage: §7/ecp setgametime <Time (min)>");
                     }
+                    break;
                 default:
                     return false;
             }
