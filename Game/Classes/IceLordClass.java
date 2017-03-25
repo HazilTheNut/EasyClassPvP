@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
@@ -47,7 +48,11 @@ public class IceLordClass extends PvPClass {
 
     @Override
     void loadArmor() {
-        genericArmor(Material.IRON_HELMET, Material.DIAMOND_CHESTPLATE, Material.IRON_LEGGINGS, Material.IRON_BOOTS);
+        if (!armorActive) {
+            genericArmor(Material.IRON_HELMET, Material.DIAMOND_CHESTPLATE, Material.CHAINMAIL_LEGGINGS, Material.IRON_BOOTS);
+        } else {
+            genericArmor(Material.DIAMOND_HELMET, Material.DIAMOND_CHESTPLATE, Material.DIAMOND_LEGGINGS, Material.DIAMOND_BOOTS);
+        }
     }
 
     private void createArmorBreakEffect(){
@@ -55,16 +60,17 @@ public class IceLordClass extends PvPClass {
         spawnLoc.setY(spawnLoc.getY() + 1);
         player.getLocation().getWorld().spawnParticle(Particle.BLOCK_CRACK, spawnLoc, 50, 0.6, 0.5, 0.6, new MaterialData(Material.ICE));
         player.getWorld().playSound(spawnLoc, Sound.BLOCK_GLASS_BREAK, 5f, 1.25f);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 0));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 15, 0));
         player.removePotionEffect(PotionEffectType.SLOW);
         armorActive = false;
+        ability2Icon.removeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL);
+        loadArmor();
     }
 
     @Override
     void specialTick(){
         if (armorActive){
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 15, 0));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 15, 1));
         }
     }
 
@@ -89,6 +95,8 @@ public class IceLordClass extends PvPClass {
             armorActive = true;
             armorHealth = 3;
             ability2_setcd = 2f;
+            ability2Icon.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
+            loadArmor();
         }
         else {
             createArmorBreakEffect();

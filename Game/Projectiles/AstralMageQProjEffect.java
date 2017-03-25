@@ -27,19 +27,12 @@ public class AstralMageQProjEffect extends ProjectileEffect{
         for (Entity target : aoeHits) {
             if (target instanceof LivingEntity && !(teamEntries != null && target instanceof Player && teamEntries.contains(target.getName()))){
                 LivingEntity dmgE = (LivingEntity)target;
-                dmgE.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 2));
-                dmgE.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 30, 3));
+                dmgE.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 50, 3));
+                dmgE.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 50, 3));
             }
         }
         loc.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 45, 1.5, 1.5, 1.5, new MaterialData(Material.GLOWSTONE));
         loc.getWorld().playSound(loc, Sound.ENTITY_FIREWORK_TWINKLE, 2f, 1.75f);
-        /* //Unsure what's going on here
-        Firework effect = (Firework)loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-        FireworkMeta effectMeta = effect.getFireworkMeta();
-        FireworkEffect fwEffect = FireworkEffect.builder().flicker(true).withColor(Color.YELLOW).with(FireworkEffect.Type.BALL).build();
-        effectMeta.setPower(0);
-        effectMeta.addEffect(fwEffect);
-        */
     }
 
     @Override

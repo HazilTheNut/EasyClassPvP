@@ -3,6 +3,7 @@ package Game.Classes;
 import Game.Projectiles.SpectreProjEffect;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
@@ -22,6 +23,7 @@ public class SpectreClass extends PvPClass {
         ItemStack classWeapon = new ItemStack(Material.IRON_SWORD, 1);
         ItemMeta weaponMeta = classWeapon.getItemMeta();
         weaponMeta.setDisplayName("§r§aEthereal Sword");
+        weaponMeta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
         classWeapon.setItemMeta(weaponMeta);
         weapon = classWeapon;
 

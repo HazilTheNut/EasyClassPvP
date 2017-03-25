@@ -366,7 +366,9 @@ public class GameManager {
             }
             ArrayList<Player> players = (ArrayList<Player>) gameWorld.getPlayers();
             clearTeams();
+            Random random = new Random();
             boolean goToRedTeam = false;
+            boolean teamDefined = false;
             for (Player player : players) {
                 if (goToRedTeam) {
                     redTeam.addEntry(player.getName());
@@ -429,11 +431,11 @@ public class GameManager {
             }
             player.sendMessage("§6: ");
             player.sendMessage("§6: =================");
-            redTeamPoints = 0;
-            blueTeamPoints = 0;
             player.setHealth(20);
             player.setFoodLevel(20);
         }
+        redTeamPoints = 0;
+        blueTeamPoints = 0;
         for (RechargingHealthPack hp : chargingHP) hp.respawn();
         clearRoster();
     }
