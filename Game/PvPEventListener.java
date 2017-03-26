@@ -3,6 +3,7 @@ package Game;
 import Game.Classes.PvPClass;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,6 +11,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.*;
 
 import java.util.List;
@@ -69,6 +71,10 @@ public class PvPEventListener implements Listener {
             Player gotHit = (Player)e.getEntity();
             GamePlayer gamePlayer = manager.getPlayerFromRoster(gotHit.getName());
             if (gamePlayer != null && gamePlayer.gamePlayerValid()){
+                if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
+                    e.setCancelled(true);
+                    return;
+                }
                 if (gamePlayer.getPlayer().getHealth() - e.getDamage() < 1){ //If the player were to die
                     manager.handlePlayerDeath(gamePlayer);
                     e.setCancelled(true);
@@ -111,6 +117,18 @@ public class PvPEventListener implements Listener {
             if (e.getMessage().length() > 0 && e.getMessage().substring(0,1).equals("/") && !(e.getMessage().length() >= 4 && e.getMessage().substring(0,4).equals("/ecp"))) {
                 e.getPlayer().sendMessage("§a[ECP]§c (Anti-Cheat) commands other than §6/ecp ...§c blocked!§7 Use §f/ecp leave§7 to exit the game and no longer be blocked");
                 e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void projectileHitBlock (ProjectileHitEvent e){
+        if (e.getEntity() instanceof Arrow){
+            if (e.getHitBlock() != null && e.getEntity().getShooter() instanceof Player){
+                GamePlayer shooter = manager.getPlayerFromRoster(((Player) e.getEntity().getShooter()).getName());
+                if (shooter != null && shooter.gamePlayerValid()){
+                    e.getEntity().remove();
+                }
             }
         }
     }

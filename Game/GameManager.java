@@ -48,7 +48,15 @@ public class GameManager {
     public int totalGameTime = 120000;
 
     private int voteCountdown = 0;
-    private boolean voting = false;
+    private int votingStage = 0;
+    private String votedMapName;
+
+    /**
+     * votingStage notes:
+     *  0: No voting
+     *  1: Voting
+     *  2: Post-voting analysis and game start
+     */
 
     private boolean processingQueues = false;
 
@@ -116,9 +124,18 @@ public class GameManager {
         if (gameTimer >= 0) gameTimer--;
         if (gameTimer == 0) endGame();
         if (voteCountdown > 0) voteCountdown--;
-        if (voteCountdown == 0 && voting){
-            voting = false;
+        if (voteCountdown == 100 && votingStage == 1){
             compileVotes();
+            votingStage++;
+        }
+        if (voteCountdown == 0 && votingStage == 2){
+            if (votedMapName != null){
+                startGame(votedMapName);
+                votedMapName = "";
+            } else {
+                for (Player player : gameWorld.getPlayers()) player.sendMessage("§a[ECP]§c Voting error! (Map selected: " + votedMapName + ")");
+            }
+            votingStage = 0;
         }
     }
 
@@ -264,16 +281,21 @@ public class GameManager {
         gamePlayer.getPlayer().setHealth(20);
         if (redTeam.hasEntry(gamePlayer.getPlayerName())) {
             blueTeamPoints++;
-            broadcastToGamePlayers('9', "+1 To Blue Team §2[§9" + blueTeamPoints + "§2 - §c" + redTeamPoints + "§2]");
+            broadcastToGameWorld('9', "+1 To Blue Team §2[§9" + blueTeamPoints + "§2 - §c" + redTeamPoints + "§2]");
         }
         if (blueTeam.hasEntry(gamePlayer.getPlayerName())) {
             redTeamPoints++;
-            broadcastToGamePlayers('c', "+1 To Red Team §2[§c" + redTeamPoints + "§2 - §9" + blueTeamPoints + "§2]");
+            broadcastToGameWorld('c', "+1 To Red Team §2[§c" + redTeamPoints + "§2 - §9" + blueTeamPoints + "§2]");
         }
     }
 
-    private void broadcastToGamePlayers(char color, String message){
-        for (Player player : gameWorld.getPlayers()) player.sendMessage("§a[ECP] §" + color + message);
+    private void broadcastToGameWorld(char color, String message) { broadcastToGameWorld(color, message, true); }
+
+    private void broadcastToGameWorld(char color, String message, boolean formatted){
+        if (formatted)
+            for (Player player : gameWorld.getPlayers()) player.sendMessage("§a[ECP] §" + color + message);
+        else
+            for (Player player : gameWorld.getPlayers()) player.sendMessage("§" + color + message);
     }
 
     public void createProjectile(Player shooter, ProjectileEffect effect, int travelDist){
@@ -296,10 +318,10 @@ public class GameManager {
 
     public void receiveVote(String mapVote, Player voter) {
         if (gameWorld != null) {
-            if (gameTimer < 0 && gameWorld.getPlayers().contains(voter)) {
-                if (!voting) {
-                    voting = true;
-                    voteCountdown = 600;
+            if (gameTimer < 0 && gameWorld.getPlayers().contains(voter) && votingStage != 2) {
+                if (votingStage == 0) {
+                    votingStage = 1;
+                    voteCountdown = 700;
                     for (Player inLobby : gameWorld.getPlayers())
                         inLobby.sendMessage("§a[ECP]§e Voting begins! do §b/ecp vote <Map Name>§e to cast a vote! Game starts in §a30§a seconds!");
                 }
@@ -326,12 +348,11 @@ public class GameManager {
     }
 
     private void compileVotes(){
-        HashMap<String, Integer> mapMap = new HashMap<>();
+        HashMap<String, Integer> mapMap = new HashMap<>(); //Map of map names and vote count
         ArrayList<String> mapList = new ArrayList<>();
         mapList.addAll(Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP").getConfig().getConfigurationSection("Maps").getKeys(false));
         for (String mapName : mapList) {
             mapMap.put(mapName, 0); //Add all maps to map
-            //Bukkit.broadcastMessage(mapName);
         }
         for (Vote vote : votingList) {
             if (mapMap.containsKey(vote.mapName))
@@ -342,15 +363,23 @@ public class GameManager {
         int topVal = -1;
         String topMap = "";
         Random tieBreaker = new Random();
-        for (String mapKey : mapMap.keySet()){
+        for (String mapKey : mapMap.keySet()){ //Go through maps and find the most voted one
             if (mapMap.get(mapKey) > topVal || (mapMap.get(mapKey) == topVal && tieBreaker.nextBoolean())){
                 topVal = mapMap.get(mapKey);
                 topMap = mapKey;
             }
-            //Bukkit.broadcastMessage(mapKey + ": " + mapMap.get(mapKey));
         }
+        broadcastToGameWorld('6', "§nVotes:");
+        broadcastToGameWorld('6', ":", false);
+        for (String mapKey : mapMap.keySet()){ //Go through maps and report total votes
+            if (mapKey.equals(topMap))
+                broadcastToGameWorld('6', ": §b§l" + mapKey + " §r§e" + mapMap.get(mapKey), false);
+            else
+                broadcastToGameWorld('6', ": §b" + mapKey + " §e" + mapMap.get(mapKey), false);
+        }
+        broadcastToGameWorld('6', ": ============", false);
         votingList.clear();
-        startGame(topMap);
+        votedMapName = topMap;
     }
 
     public void startGame(String mapName){
