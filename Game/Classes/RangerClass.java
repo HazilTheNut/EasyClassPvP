@@ -31,7 +31,7 @@ public class RangerClass extends PvPClass {
         ItemStack classWeapon = new ItemStack(Material.BOW, 1);
         ItemMeta weaponMeta = classWeapon.getItemMeta();
         weaponMeta.setDisplayName("§r§aForester Bow");
-        weaponMeta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
+        //weaponMeta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
         weaponMeta.addEnchant(Enchantment.ARROW_KNOCKBACK, 1, true);
         classWeapon.setItemMeta(weaponMeta);
         weapon = classWeapon;

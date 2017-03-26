@@ -283,6 +283,7 @@ public class GameManager {
         gamePlayer.getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, gamePlayer.getPlayer().getLocation(), 10, .2, .2, .2, 0.1);
         gamePlayer.getPlayer().getWorld().playSound(gamePlayer.getPlayer().getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 1f, 1f);
         gamePlayer.getPlayer().teleport(gamePlayer.gameSpawn);
+        gamePlayer.getPickedClass().loadKit();
         gamePlayer.getPlayer().setHealth(20);
         if (redTeam.hasEntry(gamePlayer.getPlayerName())) {
             blueTeamPoints++;
@@ -326,7 +327,8 @@ public class GameManager {
             if (gameTimer < 0 && gameWorld.getPlayers().contains(voter) && votingStage != 2) {
                 if (votingStage == 0) {
                     votingStage = 1;
-                    voteCountdown = 700;
+                    //voteCountdown = 700;
+                    voteCountdown = 120;
                     for (Player inLobby : gameWorld.getPlayers())
                         inLobby.sendMessage("§a[ECP]§e Voting begins! do §b/ecp vote <Map Name>§e to cast a vote! Game starts in §a30§a seconds!");
                 }
@@ -402,9 +404,18 @@ public class GameManager {
             ArrayList<Player> players = (ArrayList<Player>) gameWorld.getPlayers();
             clearTeams();
             Random random = new Random();
-            boolean goToRedTeam = false;
             boolean teamDefined = false;
+            boolean goToRedTeam = false;
+            int minutes = totalGameTime / 1200;
+            int seconds = (totalGameTime % 1200) / 20;
             for (Player player : players) {
+                if (!teamDefined){
+                    goToRedTeam = random.nextBoolean();
+                    teamDefined = true;
+                } else {
+                    goToRedTeam = !goToRedTeam;
+                    teamDefined = false;
+                }
                 if (goToRedTeam) {
                     redTeam.addEntry(player.getName());
                     player.teleport(redSpawn);
@@ -414,8 +425,7 @@ public class GameManager {
                     player.teleport(blueSpawn);
                     player.setBedSpawnLocation(blueSpawn);
                 }
-                goToRedTeam = !goToRedTeam;
-                player.sendMessage("§a[ECP]§c§l Game Starting... (Time: " + (float)totalGameTime / 1200 + "min)");
+                player.sendMessage(String.format("§a[ECP]§c§l Game Starting... (Time remaining: %1$d:%2$02d)", minutes, seconds));
                 player.sendMessage("§a[ECP]§7 use §b/ecp pick§7 to pick a class");
                 addPlayerToRoster(player);
             }

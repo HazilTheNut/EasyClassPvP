@@ -31,7 +31,7 @@ public class AstralMageClass extends PvPClass {
         ItemStack classWeapon = new ItemStack(Material.STICK, 1);
         ItemMeta weaponMeta = classWeapon.getItemMeta();
         //weaponMeta.setDisplayName("§r§aCosmic Staff");
-        String[] weaponDetails = {"Shoots a magic spell that","deals §b3§7 damage"};
+        String[] weaponDetails = {"Shoots a magic spell that","deals §b4§7 damage and","briefly slows"};
         writeWeaponLore("Cosmic Staff", weaponMeta, weaponDetails);
         classWeapon.setItemMeta(weaponMeta);
         weapon = classWeapon;

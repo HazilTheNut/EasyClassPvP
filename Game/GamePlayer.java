@@ -83,6 +83,10 @@ public class GamePlayer {
     }
 
     public void classPickMenu() {
+        if (pickedClass != null && !pickedClass.inSpawn){
+            player.sendMessage("§a[ECP]§c You have left the spawn! If you want to change class,§o you'll have to die first");
+            return;
+        }
         classPickInv = Bukkit.createInventory(null, 54, "Pick a Class");
         int invLoc = 11;
         for (String name : manager.getClassNameRoster()) {

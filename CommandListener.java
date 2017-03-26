@@ -53,7 +53,9 @@ public class CommandListener implements CommandExecutor {
                         if (maps.contains(strings[1]) && manager.getGameTimer() <= 0) {
                             manager.receiveVote(strings[1], (Player)commandSender);
                         } else if (manager.getGameTimer() > 0){
-                            commandSender.sendMessage("§a[ECP]§c Error: A game is currently in session! (Time remaining: " + (float)manager.getGameTimer() / 1200 + "min)");
+                            int minutes = manager.getGameTimer() / 1200;
+                            int seconds = (manager.getGameTimer() % 1200) / 20;
+                            commandSender.sendMessage(String.format("§a[ECP]§c Error: A game is currently in session! (Time remaining: %1$d:%2$02d)", minutes, seconds));
                         } else {
                             commandSender.sendMessage("§a[ECP]§c Error: That map doesn't exist!");
                         }
