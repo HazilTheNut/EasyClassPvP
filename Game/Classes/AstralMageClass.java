@@ -26,6 +26,8 @@ public class AstralMageClass extends PvPClass {
         ability1_setcd = 5f;
         ability2_setcd = 12f;
 
+        classIcon = Material.NETHER_STAR;
+
         ItemStack classWeapon = new ItemStack(Material.STICK, 1);
         ItemMeta weaponMeta = classWeapon.getItemMeta();
         //weaponMeta.setDisplayName("§r§aCosmic Staff");

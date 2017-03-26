@@ -26,6 +26,8 @@ public class RangerClass extends PvPClass {
         ability1IsRightClick = false;
         weaponCancellable = false;
 
+        classIcon = Material.BOW;
+
         ItemStack classWeapon = new ItemStack(Material.BOW, 1);
         ItemMeta weaponMeta = classWeapon.getItemMeta();
         weaponMeta.setDisplayName("§r§aForester Bow");
@@ -45,7 +47,7 @@ public class RangerClass extends PvPClass {
         ItemMeta ab2Meta = itemAb2.getItemMeta();
         String[] ab2Details = {"Sets a hidden trap at your location","","If an enemy steps over it, they","are blinded and revealed to you"
                 ,"","If there already is a trap,","the trap will instead be moved"};
-        writeAbilityLore("Dodge", ab2Meta, false, ab2Details, (int)ability2_setcd);
+        writeAbilityLore("Trap", ab2Meta, false, ab2Details, (int)ability2_setcd);
         itemAb2.setItemMeta(ab2Meta);
         ability2Icon = itemAb2;
     }

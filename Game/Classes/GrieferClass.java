@@ -22,6 +22,8 @@ public class GrieferClass extends PvPClass {
         ability1_setcd = 6f;
         ability2_setcd = 12f;
 
+        classIcon = Material.BLAZE_POWDER;
+
         ItemStack classWeapon = new ItemStack(Material.BLAZE_ROD, 1);
         ItemMeta weaponMeta = classWeapon.getItemMeta();
         String[] weaponDetails = {"Hitting an enemy that's on","fire consumes the fire to","deal §b5§2 bonus damage"};

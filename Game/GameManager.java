@@ -217,7 +217,7 @@ public class GameManager {
     }
 
     public void addPlayerToRoster(Player toAdd){
-        playerAddQueue.add(new GamePlayer(toAdd));
+        playerAddQueue.add(new GamePlayer(toAdd, this));
     }
 
     private void clearRoster(){
@@ -239,11 +239,14 @@ public class GameManager {
                     PvPClass newClass = (PvPClass) c.newInstance();
                     newClass.setManager(this);
                     player.setPickedClass(newClass);
+                    player.pickingClass = false;
                 } catch (NullPointerException e) {
                     player.getPlayer().sendMessage("§a[ECP]§c Uh oh! An internal problem occurred trying to set your class! :(");
+                } catch (IllegalAccessException | InstantiationException e) {
+                    e.printStackTrace();
                 }
         } catch (NullPointerException e){
-            player.getPlayer().sendMessage("§a[ECP]§c Error: Class does not exist!");
+            player.getPlayer().sendMessage("§a[ECP]§c Error: Class does not exist! §8(" + className + ")");
             printClassOptions(player.getPlayer());
         }
     }
@@ -266,6 +269,8 @@ public class GameManager {
         }
         return translatedKeys;
     }
+
+    public PvPClass getClassFromMap(String className) {return classMap.get(className); }
 
     public boolean isOnOtherTeam(Entity e, GamePlayer player2) {
         return !(e instanceof Player) || redTeam.hasEntry(e.getName()) ^ redTeam.hasEntry(player2.getPlayerName()) || (blueTeam.hasEntry(e.getName()) ^ blueTeam.hasEntry(player2.getPlayerName()));
@@ -377,6 +382,7 @@ public class GameManager {
             else
                 broadcastToGameWorld('6', ": §b" + mapKey + " §e" + mapMap.get(mapKey), false);
         }
+        broadcastToGameWorld('6', ":", false);
         broadcastToGameWorld('6', ": ============", false);
         votingList.clear();
         votedMapName = topMap;
@@ -410,7 +416,7 @@ public class GameManager {
                 }
                 goToRedTeam = !goToRedTeam;
                 player.sendMessage("§a[ECP]§c§l Game Starting... (Time: " + (float)totalGameTime / 1200 + "min)");
-                player.sendMessage("§a[ECP]§7 use §b/ecp pick <Class Name>§7 to pick a class");
+                player.sendMessage("§a[ECP]§7 use §b/ecp pick§7 to pick a class");
                 addPlayerToRoster(player);
             }
             emptyQueues();

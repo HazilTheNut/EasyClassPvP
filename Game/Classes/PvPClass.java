@@ -39,9 +39,10 @@ public class PvPClass {
     Player player;
     GameManager manager;
 
-    public ItemStack weapon = new ItemStack(Material.WOOD_SWORD); //Override with new ones
+    ItemStack weapon = new ItemStack(Material.WOOD_SWORD); //Override with new ones
     ItemStack ability1Icon = new ItemStack(Material.STICK); // ^
     ItemStack ability2Icon = new ItemStack(Material.STICK); // ^
+    public Material classIcon = Material.IRON_SWORD;
 
     void specialTick(){ /* Special code ran for different classes */ }
 

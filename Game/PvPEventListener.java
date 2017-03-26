@@ -12,8 +12,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -129,6 +131,23 @@ public class PvPEventListener implements Listener {
                 if (shooter != null && shooter.gamePlayerValid()){
                     e.getEntity().remove();
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInvetoryClick (InventoryClickEvent e){
+        if (e.getWhoClicked() instanceof Player) {
+            GamePlayer gamePlayer = manager.getPlayerFromRoster(e.getWhoClicked().getName());
+            if (gamePlayer != null && gamePlayer.pickingClass){
+                String className = e.getCurrentItem().getItemMeta().getDisplayName();
+                try {
+                    manager.assignClass(gamePlayer, className.substring(4));
+                    gamePlayer.getPlayer().closeInventory();
+                } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e1) {
+                    gamePlayer.getPlayer().sendMessage("§a[ECP]§c Uh oh! An internal problem occurred trying to set your class! :(");
+                }
+                e.setCancelled(true);
             }
         }
     }

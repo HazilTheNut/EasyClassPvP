@@ -30,20 +30,16 @@ public class CommandListener implements CommandExecutor {
         } else {
             switch(strings[0]){
                 case "pick":
-                    if (strings.length == 2 && commandSender instanceof Player){
-                        try {
-                            GamePlayer player = manager.getPlayerFromRoster(commandSender.getName());
-                            if (player != null) {
-                                manager.assignClass(player, strings[1]);
-                            } else {
-                                commandSender.sendMessage("§cError: You are not playing the PvP game right now!");
-                            }
-                        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                            e.printStackTrace();
+                    if (strings.length == 1 && commandSender instanceof Player){
+                        GamePlayer player = manager.getPlayerFromRoster(commandSender.getName());
+                        if (player != null) {
+                            player.classPickMenu();
+                        } else {
+                            commandSender.sendMessage("§cError: You are not playing the PvP game right now!");
                         }
                     } else {
-                        commandSender.sendMessage("§a[ECP]§c Incorrect Usage: §7/ecp pick <Class name>");
-                        if (commandSender instanceof Player) manager.printClassOptions((Player)commandSender);
+                        commandSender.sendMessage("§a[ECP]§c Incorrect Usage: §7/ecp pick");
+                        //if (commandSender instanceof Player) manager.printClassOptions((Player) commandSender);
                     }
                     break;
                 case "vote":

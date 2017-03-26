@@ -24,6 +24,8 @@ public class IceLordClass extends PvPClass {
         ability1_setcd = 5f;
         ability2_setcd = 8f; //Irrelevant given that IceLord modifies its own cooldown
 
+        classIcon = Material.DIAMOND;
+        
         ItemStack classWeapon = new ItemStack(Material.DIAMOND_SWORD, 1);
         ItemMeta weaponMeta = classWeapon.getItemMeta();
         weaponMeta.setDisplayName("§r§aGlacial Shard");

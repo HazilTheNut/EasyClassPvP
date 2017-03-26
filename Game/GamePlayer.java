@@ -1,14 +1,19 @@
 package Game;
 
 import Game.Classes.PvPClass;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 /**
  * Created by Jared on 3/11/2017.
  */
 public class GamePlayer {
+    private GameManager manager;
 
     private Player player;
     private PvPClass pickedClass;
@@ -19,7 +24,11 @@ public class GamePlayer {
     private Location originalSpawn;
     public Location gameSpawn;
 
-    GamePlayer(Player play){
+    public Inventory classPickInv;
+    public boolean pickingClass;
+
+    GamePlayer(Player play, GameManager gameManager){
+        manager = gameManager;
         player = play;
         if (player != null) {
             originalInv = player.getInventory().getContents();
@@ -54,7 +63,7 @@ public class GamePlayer {
         }
     }
 
-    Player getPlayer(){ return player;}
+    public Player getPlayer(){ return player;}
 
     PvPClass getPickedClass(){ return pickedClass; }
 
@@ -71,5 +80,20 @@ public class GamePlayer {
 
     FrozenPlayer createFrozen(){
         return new FrozenPlayer(originalInv, originalArmor, originalExtras, originalSpawn, getPlayerName());
+    }
+
+    public void classPickMenu() {
+        classPickInv = Bukkit.createInventory(null, 54, "Pick a Class");
+        int invLoc = 11;
+        for (String name : manager.getClassNameRoster()) {
+            ItemStack icon = new ItemStack(manager.getClassFromMap(name).classIcon);
+            ItemMeta iconMeta = icon.getItemMeta();
+            iconMeta.setDisplayName("§r§a" + name);
+            icon.setItemMeta(iconMeta);
+            classPickInv.setItem(invLoc, icon);
+            invLoc++;
+        }
+        player.openInventory(classPickInv);
+        pickingClass = true;
     }
 }

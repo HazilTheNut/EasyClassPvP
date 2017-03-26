@@ -20,6 +20,8 @@ public class SpectreClass extends PvPClass {
         ability1_setcd = 4f;
         ability2_setcd = 7f;
 
+        classIcon = Material.ENDER_PEARL;
+
         ItemStack classWeapon = new ItemStack(Material.IRON_SWORD, 1);
         ItemMeta weaponMeta = classWeapon.getItemMeta();
         weaponMeta.setDisplayName("§r§aEthereal Sword");
