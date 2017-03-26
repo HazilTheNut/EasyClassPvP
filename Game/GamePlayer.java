@@ -88,14 +88,16 @@ public class GamePlayer {
             return;
         }
         classPickInv = Bukkit.createInventory(null, 54, "Pick a Class");
-        int invLoc = 11;
+        int invLoc = 10;
         for (String name : manager.getClassNameRoster()) {
+            if (invLoc % 9 == 6)
+                invLoc += 4;
+            invLoc++;
             ItemStack icon = new ItemStack(manager.getClassFromMap(name).classIcon);
             ItemMeta iconMeta = icon.getItemMeta();
             iconMeta.setDisplayName("§r§a" + name);
             icon.setItemMeta(iconMeta);
             classPickInv.setItem(invLoc, icon);
-            invLoc++;
         }
         player.openInventory(classPickInv);
         pickingClass = true;

@@ -21,7 +21,7 @@ import java.util.*;
 public class GameManager {
     private HashMap<String, GamePlayer> playerRoster = new HashMap<>();
     private Map<String, PvPClass> classMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    private ArrayList<Projectile> flyingProjectiles = new ArrayList<>();
+    public ArrayList<Projectile> flyingProjectiles = new ArrayList<>();
 
     private ArrayList<GamePlayer> playerAddQueue = new ArrayList<>();
     private ArrayList<GamePlayer> playerRemoveQueue = new ArrayList<>();
@@ -64,6 +64,7 @@ public class GameManager {
         // CLASS REGISTRY
         // put class into the map here to register it for use!
 
+        classMap.put("Vanguard", new VanguardClass());
         classMap.put("Spectre", new SpectreClass());
         classMap.put("Ranger", new RangerClass());
         classMap.put("IceLord", new IceLordClass());
@@ -314,7 +315,7 @@ public class GameManager {
         projAddQueue.add(newProj);
     }
 
-    private void removeProjectile(Projectile toRemove){
+    public void removeProjectile(Projectile toRemove){
         projRemoveQueue.add(toRemove);
     }
 
