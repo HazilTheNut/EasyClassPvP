@@ -1,6 +1,7 @@
 package Game.Classes;
 
 import Game.GamePlayer;
+import Game.Projectiles.AstralMageLCProjEffect;
 import Game.Projectiles.IceLordProjEffect;
 import Game.Projectiles.Projectile;
 import org.bukkit.Location;
@@ -66,7 +67,7 @@ public class VanguardClass extends PvPClass {
                     e.remove();
                 }
             }
-            for (Projectile proj : manager.flyingProjectiles){
+            for (Projectile proj : manager.getFlyingProjectiles()){
                 if (player.getLocation().distanceSquared(proj.loc) < 7 && !(proj.creatorTeam != null && proj.creatorTeam.hasEntry(player.getName()))){
                     manager.removeProjectile(proj);
                     player.getWorld().spawnParticle(Particle.BLOCK_CRACK, proj.loc, 25, .25, .25, .25, new MaterialData(Material.GOLD_BLOCK));
@@ -79,7 +80,7 @@ public class VanguardClass extends PvPClass {
             Entity[] ents = getNearbyEntities(player.getLocation(), 3.5);
             for (Entity e : ents){
                 if (e instanceof Player){
-                    GamePlayer gamePlayer = manager.getPlayerFromRoster(e.getName());
+                    GamePlayer gamePlayer = manager.getPlayerFromRoster(player.getName());
                     if (gamePlayer != null && !manager.isOnOtherTeam(e, gamePlayer)) {
                         gamePlayer.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 2));
                         player.getWorld().spawnParticle(Particle.SPELL_INSTANT, player.getLocation().add(0, 0.5, 0), 5, 3, .5, 3, 0);
@@ -105,7 +106,8 @@ public class VanguardClass extends PvPClass {
     }
 
     @Override
-    void ability2Effect() { //Valiant Charge
+    void ability2Effect() { //Charge
+        //manager.createProjectile(player, new AstralMageLCProjEffect(), 12, true);
         chargeTime = 60;
     }
 }

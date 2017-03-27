@@ -139,7 +139,7 @@ public class PvPEventListener implements Listener {
     public void onInvetoryClick (InventoryClickEvent e){
         if (e.getWhoClicked() instanceof Player) {
             GamePlayer gamePlayer = manager.getPlayerFromRoster(e.getWhoClicked().getName());
-            if (gamePlayer != null && gamePlayer.pickingClass){
+            if (gamePlayer != null && gamePlayer.pickingClass && e.getCurrentItem() != null){
                 String className = e.getCurrentItem().getItemMeta().getDisplayName();
                 try {
                     manager.assignClass(gamePlayer, className.substring(4));

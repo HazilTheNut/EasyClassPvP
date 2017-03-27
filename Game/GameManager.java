@@ -21,7 +21,7 @@ import java.util.*;
 public class GameManager {
     private HashMap<String, GamePlayer> playerRoster = new HashMap<>();
     private Map<String, PvPClass> classMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    public ArrayList<Projectile> flyingProjectiles = new ArrayList<>();
+    private ArrayList<Projectile> flyingProjectiles = new ArrayList<>();
 
     private ArrayList<GamePlayer> playerAddQueue = new ArrayList<>();
     private ArrayList<GamePlayer> playerRemoveQueue = new ArrayList<>();
@@ -139,6 +139,8 @@ public class GameManager {
             votingStage = 0;
         }
     }
+
+    public ArrayList<Projectile> getFlyingProjectiles() { return flyingProjectiles; }
 
     private void checkGameTime(){
         if (gameTimer % 6000 == 0){
@@ -305,12 +307,19 @@ public class GameManager {
             for (Player player : gameWorld.getPlayers()) player.sendMessage("§" + color + message);
     }
 
-    public void createProjectile(Player shooter, ProjectileEffect effect, int travelDist){
+    public void createProjectile(Player shooter, ProjectileEffect effect, int travelDist) {createProjectile(shooter, effect, travelDist, false);}
+
+    public void createProjectile(Player shooter, ProjectileEffect effect, int travelDist, boolean debug){
         Projectile newProj = new Projectile(shooter.getEyeLocation(), effect);
         newProj.travelDist = travelDist;
         Team shooterTeam = null;
-        if (redTeam.hasEntry(shooter.getName())) shooterTeam = redTeam;
-        if (blueTeam.hasEntry(shooter.getName())) shooterTeam = blueTeam;
+        if (!debug) {
+            if (redTeam.hasEntry(shooter.getName())) shooterTeam = redTeam;
+            if (blueTeam.hasEntry(shooter.getName())) shooterTeam = blueTeam;
+        } else {
+            if (redTeam.hasEntry(shooter.getName())) shooterTeam = blueTeam;
+            if (blueTeam.hasEntry(shooter.getName())) shooterTeam = redTeam;
+        }
         newProj.creatorTeam = shooterTeam;
         projAddQueue.add(newProj);
     }
@@ -328,8 +337,8 @@ public class GameManager {
             if (gameTimer < 0 && gameWorld.getPlayers().contains(voter) && votingStage != 2) {
                 if (votingStage == 0) {
                     votingStage = 1;
-                    //voteCountdown = 700;
-                    voteCountdown = 120;
+                    voteCountdown = 700;
+                    //voteCountdown = 120;
                     for (Player inLobby : gameWorld.getPlayers())
                         inLobby.sendMessage("§a[ECP]§e Voting begins! do §b/ecp vote <Map Name>§e to cast a vote! Game starts in §a30§a seconds!");
                 }
