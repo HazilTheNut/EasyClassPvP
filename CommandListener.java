@@ -185,7 +185,11 @@ public class CommandListener implements CommandExecutor {
                     }
                     break;
                 default:
-                    return false;
+                    commandSender.sendMessage("§a[ECP]§c Error: Command not found!");
+                    commandSender.sendMessage("§a[ECP]§7 Cmd List: /ecp, /ecp pick, /ecp leave, /ecp vote <Map Name>");
+                    if (commandSender.isOp())
+                        commandSender.sendMessage("§a[ECP]§7 Op Cmd List: /ecp add <Name>, /ecp start <Map Name>, /ecp vote <Map Name>, /ecp createmap <...>, /ecp delmap <Map Name>, /ecp debug, /ecp setgametime <Time>, /ecp setlobbyspawn");
+                    break;
             }
         }
         return true;

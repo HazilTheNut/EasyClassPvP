@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public class CommandTabCompletion implements TabCompleter {
         if (strings.length == 0) return null;
         switch(strings[0]){
             case "pick":
-                return manager.getClassNameRoster();
+                return null;
             case "vote":
                 ArrayList<String> maps = new ArrayList<>();
                 maps.addAll(main.getConfig().getConfigurationSection("Maps").getKeys(false));
@@ -39,7 +40,16 @@ public class CommandTabCompletion implements TabCompleter {
             case "add":
                 return getPlayerRoster();
             default:
-                return null;
+                String[] cmdList = {"pick","vote","leave"};
+                String[] OpCmdList = {"debug","add","createmap","delmap","start","setlobbyspawn","setgametime"};
+                ArrayList<String> cmds = new ArrayList<>();
+                Collections.addAll(cmds, cmdList);
+                if (commandSender.isOp()){
+                    ArrayList<String> opCmds = new ArrayList<>();
+                    Collections.addAll(opCmds, OpCmdList);
+                    cmds.addAll(opCmds);
+                }
+                return cmds;
         }
     }
 
