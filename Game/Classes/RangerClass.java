@@ -6,6 +6,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -82,6 +83,16 @@ public class RangerClass extends PvPClass {
     @Override
     void loadArmor(){
         genericArmor(Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
+        colorLeather(player.getInventory().getHelmet());
+        colorLeather(player.getInventory().getChestplate());
+        colorLeather(player.getInventory().getLeggings());
+        colorLeather(player.getInventory().getBoots());
+    }
+
+    private void colorLeather(ItemStack toColor){
+        LeatherArmorMeta leatherMeta = (LeatherArmorMeta) toColor.getItemMeta();
+        leatherMeta.setColor(Color.fromRGB(80, 70, 40));
+        toColor.setItemMeta(leatherMeta);
     }
 
     @Override

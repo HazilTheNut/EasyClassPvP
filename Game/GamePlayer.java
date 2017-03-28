@@ -41,7 +41,7 @@ public class GamePlayer {
         }
     }
 
-    String getPlayerName(){
+    public String getPlayerName(){
         if (player == null){
             return "null";
         } else {

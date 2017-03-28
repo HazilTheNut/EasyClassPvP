@@ -64,6 +64,7 @@ public class GameManager {
         // CLASS REGISTRY
         // put class into the map here to register it for use!
 
+        classMap.put("Cultist", new CultistClass());
         classMap.put("Vanguard", new VanguardClass());
         classMap.put("Spectre", new SpectreClass());
         classMap.put("Ranger", new RangerClass());

@@ -2,15 +2,15 @@ package Game.Classes;
 
 import Game.Projectiles.AstralMageLCProjEffect;
 import Game.Projectiles.AstralMageQProjEffect;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import org.bukkit.*;
+import org.bukkit.Color;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
+import java.awt.*;
 import java.util.Collection;
 import java.util.Set;
 
@@ -54,6 +54,15 @@ public class AstralMageClass extends PvPClass {
     @Override
     void loadArmor(){
         genericArmor(Material.DIAMOND_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
+        colorLeather(player.getInventory().getChestplate());
+        colorLeather(player.getInventory().getLeggings());
+        colorLeather(player.getInventory().getBoots());
+    }
+
+    private void colorLeather(ItemStack toColor){
+        LeatherArmorMeta leatherMeta = (LeatherArmorMeta) toColor.getItemMeta();
+        leatherMeta.setColor(Color.fromRGB(220, 100, 40));
+        toColor.setItemMeta(leatherMeta);
     }
 
     @Override
