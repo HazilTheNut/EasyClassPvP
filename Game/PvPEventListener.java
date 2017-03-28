@@ -1,18 +1,22 @@
 package Game;
 
 import Game.Classes.PvPClass;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -46,10 +50,17 @@ public class PvPEventListener implements Listener {
             }
             if (gamePlayer.getPickedClass().weaponCancellable || hotbarSlot > 0)e.setCancelled(true);
         }
+        if (gamePlayer != null && e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock().getState() instanceof Sign){
+            Sign clickedSign = (Sign)e.getClickedBlock().getState();
+            if (clickedSign.getLine(1).equals("§5[Pick Class]")) gamePlayer.classPickMenu();
+        }
     }
 
     private boolean actionAlignsWithClass(PvPClass givenClass, Action eventAction){
-        return givenClass.ability1IsRightClick == (eventAction.equals(Action.RIGHT_CLICK_AIR) || eventAction.equals(Action.RIGHT_CLICK_BLOCK)); //Right-click aligns
+        //return givenClass.ability1IsRightClick == (eventAction.equals(Action.RIGHT_CLICK_AIR) || eventAction.equals(Action.RIGHT_CLICK_BLOCK)); //Right-click aligns
+        if (givenClass.ability1IsRightClick && (eventAction.equals(Action.RIGHT_CLICK_AIR) || eventAction.equals(Action.RIGHT_CLICK_BLOCK))) return true;
+        if (!givenClass.ability1IsRightClick && (eventAction.equals(Action.LEFT_CLICK_AIR) || eventAction.equals(Action.LEFT_CLICK_BLOCK))) return true;
+        return false;
     }
 
     private boolean actionIsRightClick(Action eventAction){
@@ -149,6 +160,20 @@ public class PvPEventListener implements Listener {
                 }
                 e.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryExit (InventoryCloseEvent e){
+        GamePlayer gamePlayer = manager.getPlayerFromRoster(e.getPlayer().getName());
+        if (gamePlayer != null) gamePlayer.pickingClass = false;
+    }
+
+    @EventHandler
+    public void onPlayerChangeSign (SignChangeEvent e){
+        String[] lines = e.getLines();
+        if (lines[1].equals("[Pick Class]") && e.getPlayer().isOp()){
+            e.setLine(1, "§5[Pick Class]");
         }
     }
 }
