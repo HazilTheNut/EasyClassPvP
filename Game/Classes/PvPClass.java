@@ -190,7 +190,7 @@ public class PvPClass {
         if (ability1_cd < 0.05f && !inSpawn) {
             player.getInventory().setItem(0, weapon);
             ability1Effect();
-            ability1_cd = ability1_setcd;
+            if (ability1_cd < 0.05f) ability1_cd = ability1_setcd;
             showCooldownItem(1, ability1_cd);
         } else {
             if (inSpawn) ability1_cd = 0.5f;
@@ -201,7 +201,7 @@ public class PvPClass {
     public void useAbility2() {
         if (ability2_cd < 0.05f && !inSpawn) {
             ability2Effect();
-            ability2_cd = ability2_setcd;
+            if (ability2_cd < 0.05f) ability2_cd = ability2_setcd;
             showCooldownItem(2, ability2_cd);
         } else {
             if (inSpawn) ability2_cd = 0.5f;

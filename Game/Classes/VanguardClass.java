@@ -31,7 +31,6 @@ public class VanguardClass extends PvPClass {
     public VanguardClass(){
         ability1_setcd = 8f;
         ability2_setcd = 12f;
-        weaponCancellable = false;
 
         classIcon = Material.GOLD_INGOT;
 

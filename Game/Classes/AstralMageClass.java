@@ -61,7 +61,7 @@ public class AstralMageClass extends PvPClass {
 
     private void colorLeather(ItemStack toColor){
         LeatherArmorMeta leatherMeta = (LeatherArmorMeta) toColor.getItemMeta();
-        leatherMeta.setColor(Color.fromRGB(220, 100, 40));
+        leatherMeta.setColor(Color.fromRGB(0x7A52C2));
         toColor.setItemMeta(leatherMeta);
     }
 
