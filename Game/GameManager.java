@@ -223,6 +223,7 @@ public class GameManager {
     }
 
     public void addPlayerToRoster(Player toAdd){
+        toAdd.setInvulnerable(false);
         playerAddQueue.add(new GamePlayer(toAdd, this));
     }
 
@@ -291,6 +292,7 @@ public class GameManager {
         gamePlayer.getPlayer().teleport(gamePlayer.gameSpawn);
         gamePlayer.getPickedClass().loadKit();
         gamePlayer.getPlayer().setHealth(20);
+        gamePlayer.getPlayer().setInvulnerable(false);
         if (redTeam.hasEntry(gamePlayer.getPlayerName())) {
             blueTeamPoints++;
             broadcastToGameWorld('9', "+1 To Blue Team §2[§9" + blueTeamPoints + "§2 - §c" + redTeamPoints + "§2]");
@@ -299,6 +301,7 @@ public class GameManager {
             redTeamPoints++;
             broadcastToGameWorld('c', "+1 To Red Team §2[§c" + redTeamPoints + "§2 - §9" + blueTeamPoints + "§2]");
         }
+
     }
 
     private void broadcastToGameWorld(char color, String message) { broadcastToGameWorld(color, message, true); }

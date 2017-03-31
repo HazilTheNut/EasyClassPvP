@@ -65,10 +65,11 @@ public class PvPClass {
             if (invincbilityPeriod > 0) {
                 player.setInvulnerable(true);
                 invincbilityPeriod--;
+            } else if (inSpawn) {
+                player.setInvulnerable(true);
             } else {
                 player.setInvulnerable(false);
             }
-            if (inSpawn) player.setInvulnerable(true);
             if (player.getLocation().getBlock().getType().equals(Material.CARPET)) {
                 if (inSpawn) {
                     inSpawn = false;
