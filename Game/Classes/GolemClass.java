@@ -7,6 +7,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.Collection;
@@ -45,7 +47,7 @@ public class GolemClass extends PvPClass {
 
         ItemStack itemAb2 = new ItemStack(Material.EMERALD, 1);
         ItemMeta ab2Meta = itemAb2.getItemMeta();
-        String[] ab2Details = {"Marks a distant enemy,","pulling them towards you","after §b2§2 seconds"};
+        String[] ab2Details = {"Marks a distant enemy,","pulling them towards you","after §b2§2 seconds","","If you miss, the cooldown is","reduced to §94§2 seconds"};
         writeAbilityLore("Ancient Power", ab2Meta, false, ab2Details, (int)ability2_setcd);
         itemAb2.setItemMeta(ab2Meta);
         ability2Icon = itemAb2;
@@ -84,24 +86,30 @@ public class GolemClass extends PvPClass {
             } else {
                 chargingAttack = false;
                 axeName = "§r§aStone Hammer";
+                player.removePotionEffect(PotionEffectType.SLOW);
             }
             meta.setDisplayName(axeName);
             player.getInventory().getItem(0).setItemMeta(meta);
+            player.getWorld().spawnParticle(Particle.SMOKE_NORMAL, player.getLocation().add(0, 0.5, 0), 7, .5, .7, .5, 0);
         }
     }
 
     @Override
     public void onLeftClickWeapon() {
-        chargingAttack = false;
-        ItemStack newWeapon = new ItemStack(weapon.getType());
-        newWeapon.getItemMeta().setDisplayName("§r§aStone Hammer");
-        player.getInventory().setItem(0, newWeapon);
+        if (chargingAttack) {
+            chargingAttack = false;
+            ItemMeta weaponMeta = weapon.getItemMeta();
+            weaponMeta.setDisplayName("§r§aStone Hammer");
+            player.getInventory().getItem(0).setItemMeta(weaponMeta);
+            player.removePotionEffect(PotionEffectType.SLOW);
+        }
     }
 
     @Override
     void ability1Effect() { //Heavy Smash
         chargingAttack = true;
         chargeTimer = 0;
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 70, 0));
     }
 
     @Override

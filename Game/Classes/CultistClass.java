@@ -65,7 +65,7 @@ public class CultistClass extends PvPClass {
                         }
                     }
                 }
-                player.getWorld().spawnParticle(Particle.SPELL_MOB, player.getLocation().add(0, 0.5, 0), 25, .5, .5, .5);
+                player.getWorld().spawnParticle(Particle.SPELL_WITCH, player.getLocation().add(0, 0.5, 0), 75, 3, .5, 3);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 20, 5));
                 lifePoolTimer = 30;
             } else {
@@ -89,7 +89,7 @@ public class CultistClass extends PvPClass {
 
     private void colorLeather(ItemStack toColor){
         LeatherArmorMeta leatherMeta = (LeatherArmorMeta) toColor.getItemMeta();
-        leatherMeta.setColor(Color.fromRGB(30, 0, 0));
+        leatherMeta.setColor(Color.fromRGB(60, 0, 0));
         toColor.setItemMeta(leatherMeta);
     }
 
@@ -103,6 +103,10 @@ public class CultistClass extends PvPClass {
 
     @Override
     void ability2Effect() { //Leap
-        player.setVelocity(player.getLocation().getDirection().normalize().multiply(2.5).setY(0.25));
+        if (player.isOnGround())
+            player.setVelocity(player.getLocation().getDirection().normalize().multiply(2.5).setY(0.25));
+        else
+            player.setVelocity(player.getLocation().getDirection().normalize().multiply(2.5).setY(-0.1));
+        player.getWorld().spawnParticle(Particle.CLOUD, player.getLocation(), 20, .5, .5, .5, 0);
     }
 }
