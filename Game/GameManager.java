@@ -230,14 +230,11 @@ public class GameManager {
     }
 
     private void clearRoster(){
-        /*
         for (int ii = 0; ii < playerRoster.keySet().size(); ii++){
             String key = (String)playerRoster.keySet().toArray()[ii];
             GamePlayer player = playerRoster.get(key);
             playerRemoveQueue.add(player);
         }
-        */
-        playerRoster.clear();
     }
 
     public GamePlayer getPlayerFromRoster(String s){
