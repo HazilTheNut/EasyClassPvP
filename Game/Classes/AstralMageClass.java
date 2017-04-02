@@ -24,7 +24,7 @@ public class AstralMageClass extends PvPClass {
 
     public AstralMageClass(){
         ability1_setcd = 5f;
-        ability2_setcd = 12f;
+        ability2_setcd = 11f;
 
         classIcon = Material.NETHER_STAR;
 

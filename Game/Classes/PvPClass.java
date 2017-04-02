@@ -62,6 +62,7 @@ public class PvPClass {
             specialTick();
             countdownAbility1();
             countdownAbility2();
+            boolean previousInvulnerability = player.isInvulnerable();
             if (invincbilityPeriod > 0) {
                 player.setInvulnerable(true);
                 invincbilityPeriod--;
@@ -69,6 +70,21 @@ public class PvPClass {
                 player.setInvulnerable(true);
             } else {
                 player.setInvulnerable(false);
+            }
+            if (player.isInvulnerable() != previousInvulnerability) {
+                if (player.isInvulnerable()) {
+                    ItemStack invulnItem = new ItemStack(Material.SLIME_BALL);
+                    ItemMeta meta = invulnItem.getItemMeta();
+                    meta.setDisplayName("§6Invulnerable");
+                    invulnItem.setItemMeta(meta);
+                    player.getInventory().setItem(8, invulnItem);
+                } else {
+                    ItemStack invulnItem = new ItemStack(Material.FIREWORK_CHARGE);
+                    ItemMeta meta = invulnItem.getItemMeta();
+                    meta.setDisplayName("§eNot Invulnerable");
+                    invulnItem.setItemMeta(meta);
+                    player.getInventory().setItem(8, invulnItem);
+                }
             }
             if (player.getLocation().getBlock().getType().equals(Material.CARPET)) {
                 if (inSpawn) {

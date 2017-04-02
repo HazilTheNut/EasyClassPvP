@@ -25,10 +25,11 @@ public class AstralMageQProjEffect extends ProjectileEffect{
     void finalEffect(Location loc){
         Collection<Entity> aoeHits = loc.getWorld().getNearbyEntities(loc, 1.25, 1.25, 1.25);
         for (Entity target : aoeHits) {
-            if (target instanceof LivingEntity && !(teamEntries != null && target instanceof Player && teamEntries.contains(target.getName()))){
+            if (target instanceof LivingEntity && !(teamEntries != null && teamEntries.contains(target.getName()))){
                 LivingEntity dmgE = (LivingEntity)target;
                 dmgE.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 50, 3));
                 dmgE.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 50, 3));
+                dmgE.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 50, 3));
             }
         }
         loc.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 45, 1.5, 1.5, 1.5, new MaterialData(Material.GLOWSTONE));

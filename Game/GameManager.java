@@ -101,12 +101,14 @@ public class GameManager {
     }
 
     private void gameLoop(){
-        for (int ii = 0; ii < playerRoster.keySet().size(); ii++){
-            String key = (String)playerRoster.keySet().toArray()[ii];
-            GamePlayer player = playerRoster.get(key);
-            PvPClass playerClass = player.getPickedClass();
-            if (playerClass != null){
-                playerClass.receiveTick();
+        if (gameTimer > 0) {
+            for (int ii = 0; ii < playerRoster.keySet().size(); ii++) {
+                String key = (String) playerRoster.keySet().toArray()[ii];
+                GamePlayer player = playerRoster.get(key);
+                PvPClass playerClass = player.getPickedClass();
+                if (playerClass != null) {
+                    playerClass.receiveTick();
+                }
             }
         }
         for (Projectile projectile : flyingProjectiles){
@@ -228,11 +230,14 @@ public class GameManager {
     }
 
     private void clearRoster(){
+        /*
         for (int ii = 0; ii < playerRoster.keySet().size(); ii++){
             String key = (String)playerRoster.keySet().toArray()[ii];
             GamePlayer player = playerRoster.get(key);
             playerRemoveQueue.add(player);
         }
+        */
+        playerRoster.clear();
     }
 
     public GamePlayer getPlayerFromRoster(String s){
@@ -540,12 +545,12 @@ public class GameManager {
         player.getLocation().getBlock().setType(Material.IRON_PLATE);
     }
 
-    private class RechargingHealthPack{
+    private class RechargingHealthPack {
         Location packLoc;
         int timeRemaining;
 
         private RechargingHealthPack(Location loc){
-            timeRemaining = 200;
+            timeRemaining = 300;
             packLoc = loc;
         }
 

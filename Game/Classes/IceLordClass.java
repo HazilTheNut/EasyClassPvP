@@ -1,13 +1,12 @@
 package Game.Classes;
 
 import Game.Projectiles.IceLordProjEffect;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -21,7 +20,7 @@ public class IceLordClass extends PvPClass {
     private boolean armorActive = false;
 
     public IceLordClass(){
-        ability1_setcd = 5f;
+        ability1_setcd = 7f;
         ability2_setcd = 8f; //Irrelevant given that IceLord modifies its own cooldown
 
         classIcon = Material.DIAMOND;
@@ -51,10 +50,18 @@ public class IceLordClass extends PvPClass {
     @Override
     void loadArmor() {
         if (!armorActive) {
-            genericArmor(Material.IRON_HELMET, Material.DIAMOND_CHESTPLATE, Material.CHAINMAIL_LEGGINGS, Material.IRON_BOOTS);
+            genericArmor(Material.IRON_HELMET, Material.DIAMOND_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
+            colorLeather(player.getInventory().getLeggings());
+            colorLeather(player.getInventory().getBoots());
         } else {
             genericArmor(Material.DIAMOND_HELMET, Material.DIAMOND_CHESTPLATE, Material.DIAMOND_LEGGINGS, Material.DIAMOND_BOOTS);
         }
+    }
+
+    private void colorLeather(ItemStack toColor){
+        LeatherArmorMeta leatherMeta = (LeatherArmorMeta) toColor.getItemMeta();
+        leatherMeta.setColor(Color.fromRGB(0x90B2D0));
+        toColor.setItemMeta(leatherMeta);
     }
 
     private void createArmorBreakEffect(){
