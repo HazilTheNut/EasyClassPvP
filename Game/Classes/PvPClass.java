@@ -204,6 +204,7 @@ public class PvPClass {
     }
 
     public void useAbility1(){
+        //player.sendMessage(this.getClass().getName());
         if (ability1_cd < 0.05f && !inSpawn) {
             player.getInventory().setItem(0, weapon);
             ability1Effect();

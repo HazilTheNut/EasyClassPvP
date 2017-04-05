@@ -77,7 +77,7 @@ public class GrieferClass extends PvPClass {
     private void explode(){ //Explosion effect of Crash Landing
         player.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, player.getLocation(), 30, 2, 2, 2);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 5f, 0.9f);
-        Entity[] dmgList = getNearbyEntities(player.getLocation(), 2);
+        Entity[] dmgList = getNearbyEntities(player.getLocation(), 2.5);
         for (Entity e : dmgList){
             if (manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName())) && e instanceof Damageable){
                 Damageable toHit = (Damageable)e;
@@ -90,7 +90,7 @@ public class GrieferClass extends PvPClass {
     void ability1Effect() { //Pocket Fire
         Vector playerProjection = player.getEyeLocation().getDirection().normalize().multiply(2.5f);
         Location effectLoc = player.getLocation().add(playerProjection);
-        Entity[] hitList = getNearbyEntities(effectLoc, 2);
+        Entity[] hitList = getNearbyEntities(effectLoc, 2.25);
         for (Entity e : hitList){
             if (manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName())) && e instanceof Damageable) e.setFireTicks(120);
         }

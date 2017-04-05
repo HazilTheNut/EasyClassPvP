@@ -9,10 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Damageable;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
@@ -78,18 +75,22 @@ public class VanguardClass extends PvPClass {
         if (chargeTime > 0){
             Entity[] ents = getNearbyEntities(player.getLocation(), 3.5);
             for (Entity e : ents){
-                if (e instanceof Player){
-                    GamePlayer gamePlayer = manager.getPlayerFromRoster(player.getName());
-                    if (gamePlayer != null && !manager.isOnOtherTeam(e, gamePlayer)) {
-                        gamePlayer.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 2));
-                        player.getWorld().spawnParticle(Particle.SPELL_INSTANT, player.getLocation().add(0, 0.5, 0), 5, 3, .5, 3, 0);
-                        if (chargeTime == 1) {
-                            gamePlayer.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 80, 2));
-                            player.getWorld().spawnParticle(Particle.BLOCK_CRACK, player.getLocation().add(0, 0.5, 0), 100, 3.5, .5, 3.5, new MaterialData(Material.GOLD_BLOCK));
-                        }
+                if (!manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName())) && e instanceof LivingEntity){
+                    LivingEntity toRally = (LivingEntity)e;
+                    toRally.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 2));
+                    if (chargeTime == 1) {
+                        toRally.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 80, 2));
+                        e.getWorld().spawnParticle(Particle.BLOCK_CRACK, e.getLocation().add(0, 0.5, 0), 40, .5, .65, .5, new MaterialData(Material.GOLD_BLOCK));
                     }
                 }
             }
+            for (Entity e : ents){
+                if (!manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName())) && e instanceof LivingEntity){
+                    LivingEntity toHeal = (LivingEntity) e;
+                    toHeal.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 15, 3));
+                }
+            }
+            player.getWorld().spawnParticle(Particle.SPELL_INSTANT, player.getLocation().add(0, 0.5, 0), 5, 3, .5, 3, 0);
             chargeTime--;
         }
     }

@@ -5,9 +5,7 @@ import Game.Projectiles.Projectile;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Particle;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -53,19 +51,18 @@ public class CultistClass extends PvPClass {
     }
 
     @Override
-    void specialTick(){ //Protector and charge effects
+    void specialTick(){ //Life Pool effect
         if (lifePoolActive){
             if (lifePoolTimer <= 0) {
                 Entity[] ents = getNearbyEntities(player.getLocation(), 3.5);
-                for (Entity e : ents) {
-                    if (e instanceof Player) {
-                        GamePlayer gamePlayer = manager.getPlayerFromRoster(player.getName());
-                        if (gamePlayer != null && !manager.isOnOtherTeam(e, gamePlayer) && !gamePlayer.getPlayerName().equals(player.getName())) {
-                            gamePlayer.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 0));
-                        }
+                for (Entity e : ents){
+                    if (!manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName())) && e instanceof LivingEntity){
+                        LivingEntity toHeal = (LivingEntity) e;
+                        toHeal.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 15, 3));
                     }
                 }
                 player.getWorld().spawnParticle(Particle.SPELL_WITCH, player.getLocation().add(0, 0.5, 0), 75, 3, .5, 3);
+                player.removePotionEffect(PotionEffectType.REGENERATION);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 20, 5));
                 lifePoolTimer = 30;
             } else {
@@ -76,7 +73,7 @@ public class CultistClass extends PvPClass {
 
     @Override
     public void onDealDamage(Entity damagee) {
-        if (player.getHealth() < 20) player.setHealth(player.getHealth() + 1);
+        if (player.getHealth() <= 19) player.setHealth(player.getHealth() + 1);
     }
 
     @Override

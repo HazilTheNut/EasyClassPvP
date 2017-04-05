@@ -89,12 +89,18 @@ public class GameManager {
         }
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("EasyClassPvP"), () -> {
-            while(processingQueues){
+            int patience = 4;
+            while(processingQueues && patience > 0){
                 try{
                     Thread.sleep(10); //Being patient
+                    patience--;
                 } catch (InterruptedException e){
                     e.printStackTrace();
                 }
+            }
+            if (patience == 0) {
+                System.out.println("[ECP] Patience in game loop exhausted! Unlocking game loop from process semaphore");
+                processingQueues = false;
             }
             gameLoop();
         }, 0, 1);
@@ -230,10 +236,8 @@ public class GameManager {
     }
 
     private void clearRoster(){
-        for (int ii = 0; ii < playerRoster.keySet().size(); ii++){
-            String key = (String)playerRoster.keySet().toArray()[ii];
-            GamePlayer player = playerRoster.get(key);
-            playerRemoveQueue.add(player);
+        for (String s : playerRoster.keySet()){
+            playerRemoveQueue.add(playerRoster.get(s));
         }
     }
 

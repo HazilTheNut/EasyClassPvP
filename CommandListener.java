@@ -196,7 +196,7 @@ public class CommandListener implements CommandExecutor {
     }
 
     private void givePluginInfo(CommandSender sender){
-        sender.sendMessage("§6[ Easy Class PvP Info ] (ver. " + main.getDescription().getVersion() + ")");
+        sender.sendMessage("§6[ Easy Class PvP Info ] (ver " + main.getDescription().getVersion() + ")");
         if (manager.gameWorld == null){
             sender.sendMessage("§c[Warning] Game World inactive / not registered : Game inactive");
         }
