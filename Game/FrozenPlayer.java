@@ -1,5 +1,6 @@
 package Game;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -13,14 +14,16 @@ public class FrozenPlayer {
     private ItemStack[] originalArmor;
     private ItemStack[] originalExtras;
     private Location originalSpawn;
+    private GameMode originalMode;
     String playerName;
 
-    public FrozenPlayer(ItemStack[] inv, ItemStack[] invArmor, ItemStack[] invExtra, Location spawn, String name){
+    public FrozenPlayer(ItemStack[] inv, ItemStack[] invArmor, ItemStack[] invExtra, Location spawn, GameMode mode, String name){
         originalInv = inv;
         originalArmor = invArmor;
         originalExtras = invExtra;
         originalSpawn = spawn;
         playerName = name;
+        originalMode = mode;
     }
 
     boolean imprintOntoPlayer( Player player){

@@ -22,6 +22,7 @@ public class GamePlayer {
     private ItemStack[] originalArmor;
     private ItemStack[] originalExtras;
     private Location originalSpawn;
+    private GameMode originalMode;
     public Location gameSpawn;
 
     public Inventory classPickInv;
@@ -36,6 +37,7 @@ public class GamePlayer {
             originalExtras = player.getInventory().getExtraContents();
             player.getInventory().clear();
             originalSpawn = player.getBedSpawnLocation();
+            originalMode = player.getGameMode();
             player.setGameMode(GameMode.ADVENTURE);
             player.sendMessage("§a[ECP]§7 Your previous inventory has been saved.");
         }
@@ -74,12 +76,12 @@ public class GamePlayer {
         player.getInventory().setArmorContents(originalArmor);
         player.getInventory().setExtraContents(originalExtras);
         player.setBedSpawnLocation(originalSpawn);
-        player.setGameMode(GameMode.SURVIVAL);
+        player.setGameMode(originalMode);
         player.sendMessage("§a[ECP]§e Your inventory has been restored!");
     }
 
     FrozenPlayer createFrozen(){
-        return new FrozenPlayer(originalInv, originalArmor, originalExtras, originalSpawn, getPlayerName());
+        return new FrozenPlayer(originalInv, originalArmor, originalExtras, originalSpawn, player.getGameMode(), getPlayerName());
     }
 
     public void classPickMenu() {

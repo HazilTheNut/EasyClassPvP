@@ -133,6 +133,7 @@ public class GameManager {
         HPRemove.clear();
         emptyQueues();
         checkGameTime();
+        if (playerRoster.size() == 0 && gameTimer > 0) endGame();
         if (gameTimer >= 0) gameTimer--;
         if (gameTimer == 0) endGame();
         if (voteCountdown > 0) voteCountdown--;
@@ -472,6 +473,7 @@ public class GameManager {
     }
 
     private void endGame(){
+        broadcastToGameWorld('c', "§l GAME END");
         clearTeams();
         Plugin serverPlugin = Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP");
         int lobbyX = serverPlugin.getConfig().getInt("Lobby.Spawn.x");
@@ -480,7 +482,6 @@ public class GameManager {
         Location lobbyLoc = new Location(gameWorld, lobbyX, lobbyY, lobbyZ);
         for (String playerName : playerRoster.keySet()){
             Player play = playerRoster.get(playerName).getPlayer();
-            play.sendMessage("§a[ECP]§c§l GAME END");
             play.teleport(lobbyLoc);
         }
         for (Player player : gameWorld.getPlayers()){
@@ -503,6 +504,7 @@ public class GameManager {
         }
         redTeamPoints = 0;
         blueTeamPoints = 0;
+        gameTimer = 0;
         for (RechargingHealthPack hp : chargingHP) hp.respawn();
         clearRoster();
     }

@@ -33,13 +33,17 @@ public class EasyClassPvPMain extends JavaPlugin{
         if (getConfig().contains("Game.World")){
             String worldName = (String)getConfig().get("Game.World");
             manager.gameWorld = Bukkit.getWorld(worldName);
+            System.out.println(" [ECP] : Game World loaded!");
         } else {
-            Bukkit.broadcastMessage("§a[ECP]§c WARNING: Game World not set, game disabled until lobby is set!");
+            System.out.println(" [ECP] : WARNING: Game World not set, game disabled until lobby is set! (Hint: /ecp setlobbyspawn)");
         }
         if (!getConfig().contains("Game.GameLength")){
             getConfig().addDefault("Game.GameLength", 6000);
+            System.out.println(" [ECP] : Game time (defaulted): 300 sec");
         } else {
-            manager.totalGameTime = getConfig().getInt("Game.GameLength");
+            int time = getConfig().getInt("Game.GameLength");
+            manager.totalGameTime = time;
+            System.out.println(" [ECP] : Game time (loaded): " + (time / 20) + " sec");
         }
         saveConfig();
     }

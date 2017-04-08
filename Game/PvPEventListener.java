@@ -48,7 +48,7 @@ public class PvPEventListener implements Listener {
             if ((e.getAction().equals(Action.LEFT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_BLOCK)) && hotbarSlot == 0){
                 gamePlayer.getPickedClass().onLeftClickWeapon();
             }
-            if (gamePlayer.getPickedClass().weaponCancellable || hotbarSlot > 0)e.setCancelled(true);
+            if (gamePlayer.getPickedClass().weaponCancellable || hotbarSlot > 0) e.setCancelled(true);
         }
         if (gamePlayer != null && e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock().getState() instanceof Sign){
             Sign clickedSign = (Sign)e.getClickedBlock().getState();
