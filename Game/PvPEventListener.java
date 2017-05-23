@@ -153,8 +153,10 @@ public class PvPEventListener implements Listener {
             if (gamePlayer != null && gamePlayer.pickingClass && e.getCurrentItem() != null){
                 String className = e.getCurrentItem().getItemMeta().getDisplayName();
                 try {
-                    manager.assignClass(gamePlayer, className.substring(4));
-                    gamePlayer.getPlayer().closeInventory();
+                    if (e.getWhoClicked().hasPermission("easyclasspvp.canplay_" + className.substring(4).toLowerCase())) {
+                        manager.assignClass(gamePlayer, className.substring(4));
+                        gamePlayer.getPlayer().closeInventory();
+                    }
                 } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e1) {
                     gamePlayer.getPlayer().sendMessage("§a[ECP]§c Uh oh! An internal problem occurred trying to set your class! :(");
                 }

@@ -4,10 +4,13 @@ import Game.Classes.PvPClass;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
 
 /**
  * Created by Jared on 3/11/2017.
@@ -67,7 +70,7 @@ public class GamePlayer {
 
     public Player getPlayer(){ return player;}
 
-    PvPClass getPickedClass(){ return pickedClass; }
+    public PvPClass getPickedClass(){ return pickedClass; }
 
     boolean gamePlayerValid(){ return pickedClass != null && player != null;}
 
@@ -98,10 +101,26 @@ public class GamePlayer {
             ItemStack icon = new ItemStack(manager.getClassFromMap(name).classIcon);
             ItemMeta iconMeta = icon.getItemMeta();
             iconMeta.setDisplayName("§r§a" + name);
+            writeMenuIconLore(icon, iconMeta, name);
             icon.setItemMeta(iconMeta);
             classPickInv.setItem(invLoc, icon);
         }
         player.openInventory(classPickInv);
         pickingClass = true;
+    }
+
+    private void writeMenuIconLore(ItemStack item, ItemMeta meta, String className){
+        if (player.hasPermission("easyclasspvp.canplay_" + className.toLowerCase())){
+            ArrayList<String> loreList = new ArrayList<>();
+            String iconLore = "§r§7Available";
+            loreList.add(iconLore);
+            meta.setLore(loreList);
+        } else {
+            ArrayList<String> loreList = new ArrayList<>();
+            String iconLore = "§r§cLocked";
+            loreList.add(iconLore);
+            meta.setLore(loreList);
+            item.setType(Material.IRON_FENCE);
+        }
     }
 }

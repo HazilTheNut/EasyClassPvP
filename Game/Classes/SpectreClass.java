@@ -1,5 +1,6 @@
 package Game.Classes;
 
+import Game.GamePlayer;
 import Game.Projectiles.SpectreProjEffect;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -76,6 +77,9 @@ public class SpectreClass extends PvPClass {
 
     @Override
     void ability2Effect() {
-        manager.createProjectile(player, new SpectreProjEffect(player), 30);
+        GamePlayer gamePlayer = manager.getPlayerFromRoster(player.getName());
+        if (gamePlayer != null) {
+            manager.createProjectile(player, new SpectreProjEffect(gamePlayer), 30);
+        }
     }
 }
