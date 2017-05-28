@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.permissions.Permission;
 
 import java.util.ArrayList;
 
@@ -110,17 +111,26 @@ public class GamePlayer {
     }
 
     private void writeMenuIconLore(ItemStack item, ItemMeta meta, String className){
-        if (player.hasPermission("easyclasspvp.canplay_" + className.toLowerCase())){
-            ArrayList<String> loreList = new ArrayList<>();
-            String iconLore = "§r§7Available";
-            loreList.add(iconLore);
-            meta.setLore(loreList);
+        Permission perm = Bukkit.getPluginManager().getPermission("easyclasspvp.canplay_" + className.toLowerCase());
+        if (perm != null) {
+            if (player.hasPermission(perm)) {
+                ArrayList<String> loreList = new ArrayList<>();
+                String iconLore = "§r§7Available";
+                loreList.add(iconLore);
+                meta.setLore(loreList);
+            } else {
+                ArrayList<String> loreList = new ArrayList<>();
+                String iconLore = "§r§cLocked";
+                loreList.add(iconLore);
+                meta.setLore(loreList);
+                item.setType(Material.IRON_FENCE);
+            }
         } else {
             ArrayList<String> loreList = new ArrayList<>();
-            String iconLore = "§r§cLocked";
+            String iconLore = "§r§cERROR";
             loreList.add(iconLore);
             meta.setLore(loreList);
-            item.setType(Material.IRON_FENCE);
+            item.setType(Material.BARRIER);
         }
     }
 }

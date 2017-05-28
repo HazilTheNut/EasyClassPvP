@@ -1,6 +1,7 @@
 package Game;
 
 import Game.Classes.PvPClass;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -18,6 +19,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.permissions.Permission;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -153,9 +155,15 @@ public class PvPEventListener implements Listener {
             if (gamePlayer != null && gamePlayer.pickingClass && e.getCurrentItem() != null){
                 String className = e.getCurrentItem().getItemMeta().getDisplayName();
                 try {
-                    if (e.getWhoClicked().hasPermission("easyclasspvp.canplay_" + className.substring(4).toLowerCase())) {
-                        manager.assignClass(gamePlayer, className.substring(4));
-                        gamePlayer.getPlayer().closeInventory();
+                    Permission perm = Bukkit.getPluginManager().getPermission("easyclasspvp.canplay_" + className.substring(4).toLowerCase());
+                    if (perm != null) {
+                        if (e.getWhoClicked().hasPermission(perm)) {
+                            manager.assignClass(gamePlayer, className.substring(4));
+                            gamePlayer.getPlayer().closeInventory();
+                        }
+                    } else {
+                        e.getWhoClicked().sendMessage("§a[ECP]§c Uh oh! An internal problem occurred trying to set your class! :(");
+                        e.getWhoClicked().closeInventory();
                     }
                 } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e1) {
                     gamePlayer.getPlayer().sendMessage("§a[ECP]§c Uh oh! An internal problem occurred trying to set your class! :(");
