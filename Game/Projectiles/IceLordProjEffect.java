@@ -18,7 +18,7 @@ public class IceLordProjEffect extends ProjectileEffect{
     public IceLordProjEffect() { piercing = true; }
 
     @Override
-    public void applyEffect(Entity target) {
+    public void applyHitEffect(Entity target) {
         damageEntity(target, 4);
         LivingEntity le = (LivingEntity)target;
         le.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 1));

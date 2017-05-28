@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffectType;
 public class AstralMageLCProjEffect extends ProjectileEffect{
 
     @Override
-    public void applyEffect(Entity target){
+    public void applyHitEffect(Entity target){
         if (target instanceof LivingEntity) {
             LivingEntity dmgE = (LivingEntity) target;
             dmgE.damage(4);

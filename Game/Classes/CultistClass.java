@@ -3,6 +3,7 @@ package Game.Classes;
 import Game.GamePlayer;
 import Game.Projectiles.Projectile;
 import org.bukkit.Color;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.*;
@@ -12,6 +13,8 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.ArrayList;
 
 /**
  * Created by Jared on 3/11/2017.
@@ -23,7 +26,7 @@ public class CultistClass extends PvPClass {
 
     public CultistClass(){
         ability1_setcd = 1f;
-        ability2_setcd = 6f;
+        ability2_setcd = 5f;
         weaponCancellable = false;
 
         classIcon = Material.GHAST_TEAR;
@@ -44,7 +47,7 @@ public class CultistClass extends PvPClass {
 
         ItemStack itemAb2 = new ItemStack(Material.STRING, 1);
         ItemMeta ab2Meta = itemAb2.getItemMeta();
-        String[] ab2Details = {"Dash in the direction you","are facing"};
+        String[] ab2Details = {"Nearby players at","low health are marked","with a red cloud","","Activate to teleport to them.","","Ability works on both teams"};
         writeAbilityLore("Leap", ab2Meta, false, ab2Details, (int)ability2_setcd);
         itemAb2.setItemMeta(ab2Meta);
         ability2Icon = itemAb2;
@@ -67,6 +70,12 @@ public class CultistClass extends PvPClass {
                 lifePoolTimer = 30;
             } else {
                 lifePoolTimer--;
+            }
+        }
+        ArrayList<Entity> entList = (ArrayList<Entity>)player.getLocation().getWorld().getNearbyEntities(player.getLocation(), 15, 15, 15);
+        for (Entity e : entList){
+            if (e instanceof LivingEntity && ((LivingEntity) e).getHealth() < 5d) {
+                e.getWorld().spawnParticle(Particle.REDSTONE, e.getLocation().add(0, 2, 0), 5, .05, .05, .05, 0);
             }
         }
     }
@@ -100,10 +109,23 @@ public class CultistClass extends PvPClass {
 
     @Override
     void ability2Effect() { //Leap
-        if (player.isOnGround())
-            player.setVelocity(player.getLocation().getDirection().normalize().multiply(2.5).setY(0.25));
-        else
-            player.setVelocity(player.getLocation().getDirection().normalize().multiply(2.5).setY(-0.1));
-        player.getWorld().spawnParticle(Particle.CLOUD, player.getLocation(), 20, .5, .5, .5, 0);
+        Location rayLoc = player.getEyeLocation();
+        boolean searchSuccess = false;
+        for (int ii = 0; ii < 20 ; ii++){
+            rayLoc.add(rayLoc.getDirection().normalize());
+            ArrayList<Entity> hitList = (ArrayList<Entity>)rayLoc.getWorld().getNearbyEntities(rayLoc, .4, .4, .4);
+            if (hitList.size() > 0){
+                for (Entity e : hitList){
+                    if (e instanceof LivingEntity && ((LivingEntity)e).getHealth() < 5d){
+                        player.getWorld().spawnParticle(Particle.REDSTONE, player.getLocation(), 50, .3, .4, .3, 0);
+                        player.teleport(e.getLocation());
+                        searchSuccess = true;
+                        break;
+                    }
+                }
+            }
+            if (searchSuccess) break;
+        }
+        if (!searchSuccess) ability2_cd = 1f;
     }
 }

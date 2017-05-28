@@ -11,7 +11,7 @@ public abstract class ProjectileEffect {
 
     boolean piercing = false;
 
-    public void applyEffect(Entity target){}
+    public void applyHitEffect(Entity target){}
 
     void damageEntity(Entity e, int amount){
         Damageable toHit = (Damageable)e;

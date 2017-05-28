@@ -37,7 +37,7 @@ public class Projectile {
         Collection<Entity> nearbyEntities = loc.getWorld().getNearbyEntities(loc, 0.4, 0.4, 0.4);
         for (Entity e : nearbyEntities){
             if (!(e instanceof Player && creatorTeam != null && creatorTeam.hasEntry(e.getName())) && !e.isInvulnerable()){
-                projEffect.applyEffect(e);
+                projEffect.applyHitEffect(e);
                 shouldStop = !projEffect.piercing;
             }
         }
