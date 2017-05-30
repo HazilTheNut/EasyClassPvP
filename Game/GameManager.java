@@ -69,8 +69,9 @@ public class GameManager {
         classMap.put("Spectre", new SpectreClass());
         classMap.put("Ranger", new RangerClass());
         classMap.put("IceLord", new IceLordClass());
-        classMap.put("Griefer", new GrieferClass());
+        classMap.put("Geomancer", new GeomancerClass());
         classMap.put("Golem", new GolemClass());
+        classMap.put("Griefer", new GrieferClass());
         classMap.put("Cultist", new CultistClass());
         classMap.put("AstralMage", new AstralMageClass());
 
@@ -190,6 +191,8 @@ public class GameManager {
         processingQueues = true;
         for (GamePlayer player : playerRemoveQueue){
             if (player != null){
+                if (player.getPickedClass() != null)
+                    player.getPickedClass().onDeath();
                 genericPlayerExit(player.getPlayer());
                 player.departPlayer();
                 if (playerRoster.containsValue(player)) playerRoster.remove(player.getPlayerName(), player);
@@ -291,6 +294,7 @@ public class GameManager {
     }
 
     public void handlePlayerDeath(GamePlayer gamePlayer){
+        gamePlayer.getPickedClass().onDeath();
         gamePlayer.getPickedClass().inSpawn = true;
         gamePlayer.getPlayer().sendMessage("§a[ECP]§7 Returning to spawn...");
         gamePlayer.getPlayer().getWorld().spawnParticle(Particle.LAVA, gamePlayer.getPlayer().getLocation(), 10, .2, .2, .2, 0);
@@ -320,18 +324,18 @@ public class GameManager {
             for (Player player : gameWorld.getPlayers()) player.sendMessage("§" + color + message);
     }
 
-    public void createProjectile(Player shooter, ProjectileEffect effect, int travelDist) {createProjectile(shooter, effect, travelDist, false);}
+    public void createProjectile(Player shooter, ProjectileEffect effect, int travelDist) {createProjectile(shooter, shooter.getEyeLocation(), effect, travelDist, false);}
 
-    public void createProjectile(Player shooter, ProjectileEffect effect, int travelDist, boolean debug){
-        Projectile newProj = new Projectile(shooter.getEyeLocation(), effect);
+    public void createProjectile(Player shooter, Location projLoc, ProjectileEffect effect, int travelDist, boolean debug){
+        Projectile newProj = new Projectile(projLoc, effect);
         newProj.travelDist = travelDist;
         Team shooterTeam = null;
-        if (!debug) {
-            if (redTeam.hasEntry(shooter.getName())) shooterTeam = redTeam;
-            if (blueTeam.hasEntry(shooter.getName())) shooterTeam = blueTeam;
-        } else {
+        if (debug) {
             if (redTeam.hasEntry(shooter.getName())) shooterTeam = blueTeam;
             if (blueTeam.hasEntry(shooter.getName())) shooterTeam = redTeam;
+        } else {
+            if (redTeam.hasEntry(shooter.getName())) shooterTeam = redTeam;
+            if (blueTeam.hasEntry(shooter.getName())) shooterTeam = blueTeam;
         }
         newProj.creatorTeam = shooterTeam;
         projAddQueue.add(newProj);

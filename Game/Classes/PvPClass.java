@@ -56,6 +56,8 @@ public class PvPClass {
 
     public void onLeftClickWeapon(){ /* Override with custom stuff */}
 
+    public void onDeath(){/* Override with custom stuff */}
+
     public void receiveTick(){
         if (player != null) {
             player.setFoodLevel(20);

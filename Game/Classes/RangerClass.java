@@ -39,7 +39,7 @@ public class RangerClass extends PvPClass {
 
         ItemStack itemAb1 = new ItemStack(Material.INK_SACK, 1, (short)2);
         ItemMeta ab1Meta = itemAb1.getItemMeta();
-        String[] ab1Details = {"Obtain §b3§2 arrows (Max: §95§2)","Restores §b4§2 health"};
+        String[] ab1Details = {"Obtain §b3§2 arrows (Max: §95§2)"};
         writeAbilityLore("Forage", ab1Meta, true, ab1Details, (int)ability1_setcd);
         itemAb1.setItemMeta(ab1Meta);
         ability1Icon = itemAb1;
