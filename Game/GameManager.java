@@ -425,8 +425,8 @@ public class GameManager {
             ArrayList<String> maps = new ArrayList<>();
             maps.addAll(serverPlugin.getConfig().getConfigurationSection("Maps").getKeys(false));
             if (maps.contains(mapName)) {
-                redSpawn = new Location(gameWorld, (int) serverPlugin.getConfig().get(fullPath + ".redX"), (int) serverPlugin.getConfig().get(fullPath + ".redY"), (int) serverPlugin.getConfig().get(fullPath + ".redZ"));
-                blueSpawn = new Location(gameWorld, (int) serverPlugin.getConfig().get(fullPath + ".blueX"), (int) serverPlugin.getConfig().get(fullPath + ".blueY"), (int) serverPlugin.getConfig().get(fullPath + ".blueZ"));
+                redSpawn = new Location(gameWorld, (int) serverPlugin.getConfig().get(fullPath + ".redX"), (int) serverPlugin.getConfig().get(fullPath + ".redY") + 1, (int) serverPlugin.getConfig().get(fullPath + ".redZ"));
+                blueSpawn = new Location(gameWorld, (int) serverPlugin.getConfig().get(fullPath + ".blueX"), (int) serverPlugin.getConfig().get(fullPath + ".blueY") + 1, (int) serverPlugin.getConfig().get(fullPath + ".blueZ"));
             }
             ArrayList<Player> players = (ArrayList<Player>) gameWorld.getPlayers();
             clearTeams();

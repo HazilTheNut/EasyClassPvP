@@ -12,6 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.material.MaterialData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public class GeomancerClass extends PvPClass {
 
     private ArrayList<Location> stoneLocs = new ArrayList<>();
     private boolean breakingStones = false;
+    private int avalancheTimer = 0;
 
     public GeomancerClass(){
         ability1_setcd = 7f;
@@ -38,21 +41,21 @@ public class GeomancerClass extends PvPClass {
 
         ItemStack classWeapon = new ItemStack(Material.CLAY_BALL, 1);
         ItemMeta weaponMeta = classWeapon.getItemMeta();
-        String[] weaponDetails = {"Shoots a magic spell that","deals §b4§7 damage and","creates a stone where it lands","","Max stones: §915§2"};
+        String[] weaponDetails = {"Shoots a magic spell that","deals §b4§7 damage and","creates a §estone§7 where it lands","","Max stones: §915§2"};
         writeWeaponLore("Stone Orb", weaponMeta, weaponDetails);
         classWeapon.setItemMeta(weaponMeta);
         weapon = classWeapon;
 
         ItemStack itemAb1 = new ItemStack(Material.COBBLESTONE, 1);
         ItemMeta ab1Meta = itemAb1.getItemMeta();
-        String[] ab1Details = {"Destroys all placed stones and","deals §b4§2 damage to enemies","near the breaking stones"};
+        String[] ab1Details = {"Destroys all placed §estones§2 and","deals §b4§2 damage and slows by §b20%§2","to nearby enemies"};
         writeAbilityLore("Shatter", ab1Meta, true, ab1Details, (int)ability1_setcd);
         itemAb1.setItemMeta(ab1Meta);
         ability1Icon = itemAb1;
 
         ItemStack itemAb2 = new ItemStack(Material.PRISMARINE_CRYSTALS, 1);
         ItemMeta ab2Meta = itemAb2.getItemMeta();
-        String[] ab2Details = {"Fires a spray of §b8§7 stones"};
+        String[] ab2Details = {"Fires a barrage of §b9 §estones§r","","Resets cooldown of Shatter"};
         writeAbilityLore("Avalanche", ab2Meta, false, ab2Details, (int)ability2_setcd);
         itemAb2.setItemMeta(ab2Meta);
         ability2Icon = itemAb2;
@@ -69,7 +72,7 @@ public class GeomancerClass extends PvPClass {
 
     private void colorLeather(ItemStack toColor){
         LeatherArmorMeta leatherMeta = (LeatherArmorMeta) toColor.getItemMeta();
-        leatherMeta.setColor(Color.fromRGB(0xc6beb6));
+        leatherMeta.setColor(Color.fromRGB(0xbaaea9));
         toColor.setItemMeta(leatherMeta);
     }
 
@@ -81,6 +84,18 @@ public class GeomancerClass extends PvPClass {
             weaponMeta.setDisplayName(getWeaponName());
             weapon.setItemMeta(weaponMeta);
             player.getInventory().setItem(0, weapon);
+        }
+        if (avalancheTimer > 0) {
+            if (avalancheTimer % 10 == 0) {
+                for (int ii = 0; ii < 3; ii++) {
+                    Location loc = player.getEyeLocation();
+                    Random random = new Random();
+                    loc.setDirection(loc.getDirection().normalize().multiply(2.75).add(new Vector(0.5 - random.nextDouble(), 0.5 - random.nextDouble(), 0.5 - random.nextDouble())));
+                    manager.createProjectile(player, loc, new GeomancerProjEffect(this), 12, false);
+                }
+            }
+            avalancheTimer--;
+            if (avalancheTimer == 0 && ability1_cd > 0.05f) ability1_cd = 0.05f;
         }
     }
 
@@ -118,12 +133,13 @@ public class GeomancerClass extends PvPClass {
 
     private void breakStone(Location loc, boolean dealDamage){
         loc.getBlock().setType(Material.AIR);
-        loc.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 20, .5, .5, .5, new MaterialData(Material.COBBLESTONE));
+        loc.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 20, .75, .75, .75, new MaterialData(Material.COBBLESTONE));
         if (dealDamage) {
             Entity[] hitList = getNearbyEntities(loc, 1);
             for (Entity e : hitList) {
                 if (manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName())) && e instanceof LivingEntity) {
                     ((LivingEntity) e).damage(4);
+                    ((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 0));
                 }
             }
         }
@@ -140,12 +156,7 @@ public class GeomancerClass extends PvPClass {
 
     @Override
     void ability2Effect(){ //Avalanche
-        for (int ii = 0; ii < 8; ii++){
-            Location loc = player.getEyeLocation();
-            Random random = new Random();
-            loc.setDirection(loc.getDirection().normalize().multiply(1.75).add(new Vector(0.5 - random.nextDouble(), 0.5 - random.nextDouble(), 0.5 - random.nextDouble())));
-            manager.createProjectile(player, loc, new GeomancerProjEffect(this), 12, false);
-        }
+        avalancheTimer = 30;
     }
 
     private Set<String> getCorrectTeamEntries(){
