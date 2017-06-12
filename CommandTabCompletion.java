@@ -31,7 +31,11 @@ public class CommandTabCompletion implements TabCompleter {
                 return null;
             case "vote":
                 ArrayList<String> maps = new ArrayList<>();
-                maps.addAll(main.getConfig().getConfigurationSection("Maps").getKeys(false));
+                ArrayList<String> rawList = new ArrayList<>();
+                rawList.addAll(main.getConfig().getConfigurationSection("Maps").getKeys(false));
+                for (String map : rawList){
+                    if ((Boolean) main.getConfig().get("Maps." + map + ".enabled")) maps.add(map);
+                }
                 return maps;
             case "leave":
                 return null;

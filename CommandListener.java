@@ -50,7 +50,7 @@ public class CommandListener implements CommandExecutor {
                         }
                         ArrayList<String> maps = new ArrayList<>();
                         maps.addAll(main.getConfig().getConfigurationSection("Maps").getKeys(false));
-                        if (maps.contains(strings[1]) && manager.getGameTimer() <= 0) {
+                        if (maps.contains(strings[1]) && (Boolean) main.getConfig().get("Maps." + strings[1] + ".enabled") && manager.getGameTimer() <= 0) {
                             manager.receiveVote(strings[1], (Player)commandSender);
                         } else if (manager.getGameTimer() > 0){
                             int minutes = manager.getGameTimer() / 1200;
@@ -76,8 +76,7 @@ public class CommandListener implements CommandExecutor {
                         commandSender.sendMessage("MAP ROSTER:");
                         ArrayList<String> maps = new ArrayList<>();
                         maps.addAll(main.getConfig().getConfigurationSection("Maps").getKeys(false));
-                        for(String mapName : maps) commandSender.sendMessage(" " + mapName);
-
+                        for(String mapName : maps) { if ((Boolean) main.getConfig().get("Maps." + mapName + ".enabled")) commandSender.sendMessage(" " + mapName); }
                     } else {
                         commandSender.sendMessage("§a[ECP]§c Access denied!");
                     }
@@ -105,6 +104,7 @@ public class CommandListener implements CommandExecutor {
                         main.getConfig().addDefault("Maps." + strings[1] + ".blueX", Integer.valueOf(strings[5]));
                         main.getConfig().addDefault("Maps." + strings[1] + ".blueY", Integer.valueOf(strings[6]));
                         main.getConfig().addDefault("Maps." + strings[1] + ".blueZ", Integer.valueOf(strings[7]));
+                        main.getConfig().addDefault("Maps." + strings[1] + ".enabled", true);
                         main.saveConfig();
                         commandSender.sendMessage("§a[ECP]§e Map §f" + strings[1] + "§e created! §8(Path: Maps." + strings[1] + ")");
                     } catch (NumberFormatException e){
@@ -122,7 +122,7 @@ public class CommandListener implements CommandExecutor {
                     }
                     //boolean success = false;
                     if (main.getConfig().contains("Maps." + strings[1])) {
-                        main.getConfig().set("Maps." + strings[1], null);
+                        main.getConfig().set("Maps." + strings[1] + ".enabled", false);
                         commandSender.sendMessage("§a[ECP]§e Deletion of Map §f" + strings[1] + "§e successful! §8(Path: Maps." + strings[1] + ")");
                         main.saveConfig();
                     }
@@ -198,7 +198,7 @@ public class CommandListener implements CommandExecutor {
     private void givePluginInfo(CommandSender sender){
         sender.sendMessage("§6[ Easy Class PvP Info ] (ver " + main.getDescription().getVersion() + ")");
         if (manager.gameWorld == null){
-            sender.sendMessage("§c[Warning] Game World inactive / not registered : Game inactive");
+            sender.sendMessage("§c[Warning] Game World inactive / not registered : EasyClassPvP inactive");
         }
         sender.sendMessage("§b/ecp pick§r - Opens class pick menu");
         sender.sendMessage("§b/ecp vote <map name>§r - Votes for a map between matches");
