@@ -44,8 +44,8 @@ public class GameManager {
     public Location blueSpawn;
     public World gameWorld;
 
-    private int gameTimer = 0;
-    public int totalGameTime = 120000;
+    private long gameTimer = 0;
+    public long totalGameTime = 120000;
 
     private int voteCountdown = 0;
     private int votingStage = 0;
@@ -72,6 +72,7 @@ public class GameManager {
         classMap.put("Geomancer", new GeomancerClass());
         classMap.put("Golem", new GolemClass());
         classMap.put("Griefer", new GrieferClass());
+        classMap.put("Eclipse", new EclipseClass());
         classMap.put("Cultist", new CultistClass());
         classMap.put("AstralMage", new AstralMageClass());
 
@@ -345,7 +346,7 @@ public class GameManager {
         projRemoveQueue.add(toRemove);
     }
 
-    public int getGameTimer() { return gameTimer; }
+    public long getGameTimer() { return gameTimer; }
 
     private ArrayList<Vote> votingList = new ArrayList<>();
 
@@ -386,7 +387,8 @@ public class GameManager {
         ArrayList<String> mapList = new ArrayList<>();
         mapList.addAll(Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP").getConfig().getConfigurationSection("Maps").getKeys(false));
         for (String mapName : mapList) {
-            mapMap.put(mapName, 0); //Add all maps to map
+            if (Bukkit.getServer().getPluginManager().getPlugin("EasyClassPvP").getConfig().getBoolean("Maps." + mapName + ".enabled"))
+                mapMap.put(mapName, 0); //Add all maps to map if enabled
         }
         for (Vote vote : votingList) {
             if (mapMap.containsKey(vote.mapName))
@@ -433,8 +435,8 @@ public class GameManager {
             Random random = new Random();
             boolean teamDefined = false;
             boolean goToRedTeam = false;
-            int minutes = totalGameTime / 1200;
-            int seconds = (totalGameTime % 1200) / 20;
+            long minutes = totalGameTime / 1200;
+            long seconds = (totalGameTime % 1200) / 20;
             for (Player player : players) {
                 if (!teamDefined){
                     goToRedTeam = random.nextBoolean();

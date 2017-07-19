@@ -27,7 +27,7 @@ public class CultistClass extends PvPClass {
     public CultistClass(){
         ability1_setcd = 1f;
         ability2_setcd = 5f;
-        weaponCancellable = false;
+        weaponCancellable = true;
 
         classIcon = Material.GHAST_TEAR;
 

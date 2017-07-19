@@ -135,7 +135,6 @@ public class PvPClass {
         }
         meta.setLore(lore);
         meta.setDisplayName("§a" + name);
-        if (player != null) player.sendMessage("Icon created!");
     }
 
     void writeAbilityLore(String name, ItemMeta meta, boolean isAbility1, String[] abilityDetails, int cooldown){
@@ -154,7 +153,6 @@ public class PvPClass {
         lore.add(" §r§7COOLDOWN: §9" + String.valueOf(cooldown) + "§7 seconds");
         meta.setLore(lore);
         meta.setDisplayName("§6" + name);
-        if (player != null) player.sendMessage("Icon created!");
     }
 
     void showCooldownItem(int loc, float cd){
