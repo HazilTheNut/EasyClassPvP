@@ -10,19 +10,25 @@ import org.bukkit.potion.PotionEffectType;
 /**
  * Created by Jared on 3/15/2017.
  */
-public class EclipseProjEffect extends ProjectileEffect{
+public class AstralMageLCProj extends Projectile{
+
+    public AstralMageLCProj(Location start) {
+        super(start);
+    }
 
     @Override
-    public void applyHitEffect(Entity target){
+    public boolean applyHitEffect(Entity target){
         if (target instanceof LivingEntity) {
             LivingEntity dmgE = (LivingEntity) target;
             dmgE.damage(4);
+            dmgE.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, 0));
         }
+        return true;
     }
 
     @Override
     void playEffects(Location loc) {
-        loc.getWorld().spawnParticle(Particle.FLAME, loc, 5, .1, .1, .1, 0);
-        loc.getWorld().spawnParticle(Particle.CRIT, loc, 5, .2, .2, .2, 0);
+        loc.getWorld().spawnParticle(Particle.CRIT_MAGIC, loc, 10, .1, .1, .1, 0);
+        loc.getWorld().spawnParticle(Particle.FLAME, loc, 5, .2, .2, .2, 0);
     }
 }

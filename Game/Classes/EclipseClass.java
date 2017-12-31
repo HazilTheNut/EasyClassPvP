@@ -1,11 +1,10 @@
 package Game.Classes;
 
-import Game.Projectiles.EclipseProjEffect;
+import Game.Projectiles.EclipseProj;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -157,7 +156,7 @@ public class EclipseClass extends PvPClass {
     @Override
     void ability1Effect() { // Fireball / Night Blade
         if (inSunMode){ //Fireball
-            manager.createProjectile(player, new EclipseProjEffect(), 15);
+            manager.createProjectile(player, new EclipseProj(player.getEyeLocation()), 15);
         } else { //Night Blade
             nightBladeTimer = 80;
             player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 80, 0));

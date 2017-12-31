@@ -1,6 +1,7 @@
 package Game.Projectiles;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
@@ -13,36 +14,43 @@ import java.util.Collection;
  */
 public class Projectile {
     public Location loc;
-    ProjectileEffect projEffect;
     public int travelDist;
     public Team creatorTeam;
 
     private Vector travelVector;
 
-    public Projectile(Location start,  ProjectileEffect effect){
+    public Projectile(Location start){
         loc = start;
         loc.setY(loc.getY()-0.2f);
-        projEffect = effect;
         travelVector = loc.getDirection().normalize();
     }
 
     public void move(){
         loc.add(travelVector);
-        projEffect.playEffects(loc);
+        playEffects(loc);
         travelDist--;
     }
 
     public boolean attemptHit(){
-        boolean shouldStop = false;
         Collection<Entity> nearbyEntities = loc.getWorld().getNearbyEntities(loc, 0.4, 0.4, 0.4);
         for (Entity e : nearbyEntities){
-            if (!(e instanceof Player && creatorTeam != null && creatorTeam.hasEntry(e.getName())) && !e.isInvulnerable()){
-                projEffect.applyHitEffect(e);
-                shouldStop = !projEffect.piercing;
+            if (isHittable(e)){
+                return applyHitEffect(e);
             }
         }
-        return shouldStop;
+        return false;
     }
 
-    public void endEffect(){ projEffect.finalEffect(loc); }
+    protected boolean isHittable(Entity e){ return !(e instanceof Player && creatorTeam != null && creatorTeam.hasEntry(e.getName())) && !e.isInvulnerable(); }
+
+    public void endEffect(){}
+
+    public boolean applyHitEffect(Entity target){ return false; }
+
+    void damageEntity(Entity e, int amount){
+        Damageable toHit = (Damageable)e;
+        toHit.damage(amount,e);
+    }
+
+    void playEffects(Location loc){}
 }

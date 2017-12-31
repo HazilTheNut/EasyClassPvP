@@ -1,11 +1,7 @@
 package Game.Classes;
 
-import Game.Projectiles.AstralMageLCProjEffect;
-import Game.Projectiles.AstralMageQProjEffect;
-import Game.Projectiles.GeomancerProjEffect;
+import Game.Projectiles.GeomancerProj;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +13,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Random;
 import java.util.Set;
 
@@ -91,7 +86,7 @@ public class GeomancerClass extends PvPClass {
                     Location loc = player.getEyeLocation();
                     Random random = new Random();
                     loc.setDirection(loc.getDirection().normalize().multiply(2.75).add(new Vector(0.5 - random.nextDouble(), 0.5 - random.nextDouble(), 0.5 - random.nextDouble())));
-                    manager.createProjectile(player, loc, new GeomancerProjEffect(this), 12, false);
+                    manager.createProjectile(player, new GeomancerProj(this, player.getEyeLocation()), 12, false);
                 }
             }
             avalancheTimer--;
@@ -117,7 +112,7 @@ public class GeomancerClass extends PvPClass {
     public void onLeftClickWeapon() {
         if (attack_cd == 0) {
             attack_cd = attack_setcd;
-            manager.createProjectile(player, new GeomancerProjEffect(this), 12);
+            manager.createProjectile(player, new GeomancerProj(this, player.getEyeLocation()), 12, false);
         }
     }
 

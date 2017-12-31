@@ -1,21 +1,14 @@
 package Game.Classes;
 
-import Game.GamePlayer;
-import Game.Projectiles.AstralMageLCProjEffect;
-import Game.Projectiles.IceLordProjEffect;
 import Game.Projectiles.Projectile;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 
 /**
  * Created by Jared on 3/11/2017.
@@ -107,7 +100,7 @@ public class VanguardClass extends PvPClass {
 
     @Override
     void ability2Effect() { //Charge
-        //manager.createProjectile(player, new AstralMageLCProjEffect(), 12, true);
+        //manager.createProjectile(player, new AstralMageLCProj(), 12, true);
         chargeTime = 60;
     }
 }

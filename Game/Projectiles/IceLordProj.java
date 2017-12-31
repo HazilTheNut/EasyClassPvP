@@ -13,15 +13,18 @@ import org.bukkit.potion.PotionEffectType;
 /**
  * Created by Jared on 3/11/2017.
  */
-public class IceLordProjEffect extends ProjectileEffect{
+public class IceLordProj extends Projectile {
 
-    public IceLordProjEffect() { piercing = true; }
+    public IceLordProj(Location start) {
+        super(start);
+    }
 
     @Override
-    public void applyHitEffect(Entity target) {
+    public boolean applyHitEffect(Entity target) {
         damageEntity(target, 4);
         LivingEntity le = (LivingEntity)target;
         le.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 1));
+        return false;
     }
 
     @Override

@@ -74,7 +74,7 @@ public class CultistClass extends PvPClass {
         }
         ArrayList<Entity> entList = (ArrayList<Entity>)player.getLocation().getWorld().getNearbyEntities(player.getLocation(), 15, 15, 15);
         for (Entity e : entList){
-            if (e instanceof LivingEntity && ((LivingEntity) e).getHealth() < 5d) {
+            if (e instanceof LivingEntity && ((LivingEntity) e).getHealth() < 5d && ability2_cd <= 0.05f) {
                 e.getWorld().spawnParticle(Particle.REDSTONE, e.getLocation().add(0, 2, 0), 5, .05, .05, .05, 0);
             }
         }

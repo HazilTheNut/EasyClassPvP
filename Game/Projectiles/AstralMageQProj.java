@@ -7,25 +7,21 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * Created by Jared on 3/15/2017.
  */
-public class AstralMageQProjEffect extends ProjectileEffect{
+public class AstralMageQProj extends Projectile{
 
-    Set<String> teamEntries;
-
-    public AstralMageQProjEffect(Set<String> entries) {
-        piercing = true;
-        teamEntries = entries;
+    public AstralMageQProj(Location start) {
+        super(start);
     }
 
     @Override
-    void finalEffect(Location loc){
+    public void endEffect(){
         Collection<Entity> aoeHits = loc.getWorld().getNearbyEntities(loc, 1.25, 1.25, 1.25);
         for (Entity target : aoeHits) {
-            if (target instanceof LivingEntity && !(teamEntries != null && teamEntries.contains(target.getName()))){
+            if (target instanceof LivingEntity && isHittable(target)){
                 LivingEntity dmgE = (LivingEntity)target;
                 dmgE.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 50, 3));
                 dmgE.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 50, 3));

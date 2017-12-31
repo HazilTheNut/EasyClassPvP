@@ -1,7 +1,7 @@
 package Game.Classes;
 
 import Game.GamePlayer;
-import Game.Projectiles.SpectreProjEffect;
+import Game.Projectiles.SpectreProj;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.enchantments.Enchantment;
@@ -79,7 +79,7 @@ public class SpectreClass extends PvPClass {
     void ability2Effect() {
         GamePlayer gamePlayer = manager.getPlayerFromRoster(player.getName());
         if (gamePlayer != null) {
-            manager.createProjectile(player, new SpectreProjEffect(gamePlayer), 30);
+            manager.createProjectile(player, new SpectreProj(manager.getPlayerFromRoster(player.getName()), player.getEyeLocation()), 30);
         }
     }
 }

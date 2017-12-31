@@ -9,16 +9,17 @@ import org.bukkit.entity.Player;
 /**
  * Created by Jared on 3/16/2017.
  */
-public class SpectreProjEffect extends ProjectileEffect {
+public class SpectreProj extends Projectile {
 
     GamePlayer toTeleport;
 
-    public SpectreProjEffect(GamePlayer shooter) {
+    public SpectreProj(GamePlayer shooter, Location start) {
+        super(start);
         toTeleport = shooter;
     }
 
     @Override
-    void finalEffect(Location loc) {
+    public void endEffect() {
         if (!toTeleport.getPickedClass().inSpawn) {
             Location steppedBackLoc = loc.add(loc.getDirection().multiply(-1));
             toTeleport.getPlayer().teleport(steppedBackLoc);

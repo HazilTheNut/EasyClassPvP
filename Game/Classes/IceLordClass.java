@@ -1,8 +1,7 @@
 package Game.Classes;
 
-import Game.Projectiles.IceLordProjEffect;
+import Game.Projectiles.IceLordProj;
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -95,7 +94,7 @@ public class IceLordClass extends PvPClass {
 
     @Override
     void ability1Effect() { //Ice Blast
-        manager.createProjectile(player, new IceLordProjEffect(), 12);
+        manager.createProjectile(player, new IceLordProj(player.getEyeLocation()), 12);
     }
 
     @Override

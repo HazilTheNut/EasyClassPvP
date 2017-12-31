@@ -2,7 +2,6 @@ package Game;
 
 import Game.Classes.*;
 import Game.Projectiles.Projectile;
-import Game.Projectiles.ProjectileEffect;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -69,6 +68,7 @@ public class GameManager {
         classMap.put("Spectre", new SpectreClass());
         classMap.put("Ranger", new RangerClass());
         classMap.put("IceLord", new IceLordClass());
+        classMap.put("Hero", new HeroClass());
         classMap.put("Geomancer", new GeomancerClass());
         classMap.put("Golem", new GolemClass());
         classMap.put("Griefer", new GrieferClass());
@@ -325,10 +325,9 @@ public class GameManager {
             for (Player player : gameWorld.getPlayers()) player.sendMessage("§" + color + message);
     }
 
-    public void createProjectile(Player shooter, ProjectileEffect effect, int travelDist) {createProjectile(shooter, shooter.getEyeLocation(), effect, travelDist, false);}
+    public void createProjectile(Player shooter, Projectile proj, int travelDist) {createProjectile(shooter, proj, travelDist, false);}
 
-    public void createProjectile(Player shooter, Location projLoc, ProjectileEffect effect, int travelDist, boolean debug){
-        Projectile newProj = new Projectile(projLoc, effect);
+    public void createProjectile(Player shooter, Projectile newProj, int travelDist, boolean debug){
         newProj.travelDist = travelDist;
         Team shooterTeam = null;
         if (debug) {

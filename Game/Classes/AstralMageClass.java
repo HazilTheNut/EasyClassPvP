@@ -1,7 +1,7 @@
 package Game.Classes;
 
-import Game.Projectiles.AstralMageLCProjEffect;
-import Game.Projectiles.AstralMageQProjEffect;
+import Game.Projectiles.AstralMageLCProj;
+import Game.Projectiles.AstralMageQProj;
 import org.bukkit.*;
 import org.bukkit.Color;
 import org.bukkit.entity.Damageable;
@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-import java.awt.*;
 import java.util.Collection;
 import java.util.Set;
 
@@ -94,7 +93,7 @@ public class AstralMageClass extends PvPClass {
     public void onLeftClickWeapon() {
         if (attack_cd == 0) {
             attack_cd = attack_setcd;
-            manager.createProjectile(player, new AstralMageLCProjEffect(), 15);
+            manager.createProjectile(player, new AstralMageLCProj(player.getEyeLocation()), 15);
         }
     }
 
@@ -122,7 +121,7 @@ public class AstralMageClass extends PvPClass {
 
     @Override
     void ability2Effect(){ //Flash
-        manager.createProjectile(player, new AstralMageQProjEffect(getCorrectTeamEntries()), 7);
+        manager.createProjectile(player, new AstralMageQProj(player.getEyeLocation()), 7);
     }
 
     private Set<String> getCorrectTeamEntries(){

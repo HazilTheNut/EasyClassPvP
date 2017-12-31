@@ -10,11 +10,12 @@ import org.bukkit.material.MaterialData;
 /**
  * Created by Jared on 5/29/2017.
  */
-public class GeomancerProjEffect extends ProjectileEffect {
+public class GeomancerProj extends Projectile {
 
     GeomancerClass geomancer;
 
-    public GeomancerProjEffect (GeomancerClass wizard){
+    public GeomancerProj(GeomancerClass wizard, Location start){
+        super(start);
         geomancer = wizard;
     }
 
@@ -24,12 +25,13 @@ public class GeomancerProjEffect extends ProjectileEffect {
     }
 
     @Override
-    public void applyHitEffect(Entity target) {
+    public boolean applyHitEffect(Entity target) {
         damageEntity(target, 4);
+        return true;
     }
 
     @Override
-    void finalEffect(Location loc) {
+    public void endEffect() {
         geomancer.addStoneLoc(loc);
     }
 }
