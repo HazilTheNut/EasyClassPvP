@@ -77,9 +77,9 @@ public class SpectreClass extends PvPClass {
 
     @Override
     void ability2Effect() {
-        GamePlayer gamePlayer = manager.getPlayerFromRoster(player.getName());
+        GamePlayer gamePlayer = getGamePlayer();
         if (gamePlayer != null) {
-            manager.createProjectile(player, new SpectreProj(manager.getPlayerFromRoster(player.getName()), player.getEyeLocation()), 30);
+            manager.createProjectile(player, new SpectreProj(getGamePlayer(), player.getEyeLocation()), 30);
         }
     }
 }

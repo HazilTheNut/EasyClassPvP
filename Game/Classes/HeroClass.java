@@ -63,7 +63,7 @@ public class HeroClass extends PvPClass {
     void specialTick(){ //Timer on Empower
         if (empowermentTimer == 1){
             weapon = normalWeapon;
-            player.getInventory().setItem(0, weapon);
+            player.getInventory().setItem(0, normalWeapon);
         }
         if (empowermentTimer > 0) empowermentTimer--;
     }
@@ -73,7 +73,7 @@ public class HeroClass extends PvPClass {
         if (empowermentTimer > 0){
             Entity[] nearbys = getNearbyEntities(damagee.getLocation(), 2.25);
             for (Entity e : nearbys){
-                if (e instanceof LivingEntity && manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName()))){
+                if (e instanceof LivingEntity && manager.isOnOtherTeam(e, getGamePlayer())){
                     ((LivingEntity) e).damage(3);
                 }
             }
@@ -100,6 +100,6 @@ public class HeroClass extends PvPClass {
     void ability2Effect() { //Empower
         empowermentTimer = 80;
         weapon = empoweredWeapon;
-        player.getInventory().setItem(0, weapon);
+        player.getInventory().setItem(0, empoweredWeapon);
     }
 }

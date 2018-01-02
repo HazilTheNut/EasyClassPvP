@@ -68,7 +68,7 @@ public class VanguardClass extends PvPClass {
         if (chargeTime > 0){
             Entity[] ents = getNearbyEntities(player.getLocation(), 3.5);
             for (Entity e : ents){
-                if (!manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName())) && e instanceof LivingEntity){
+                if (!manager.isOnOtherTeam(e, getGamePlayer()) && e instanceof LivingEntity){
                     LivingEntity toRally = (LivingEntity)e;
                     toRally.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 2));
                     if (chargeTime == 1) {
@@ -78,7 +78,7 @@ public class VanguardClass extends PvPClass {
                 }
             }
             for (Entity e : ents){
-                if (!manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName())) && e instanceof LivingEntity){
+                if (!manager.isOnOtherTeam(e, getGamePlayer()) && e instanceof LivingEntity){
                     LivingEntity toHeal = (LivingEntity) e;
                     toHeal.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 15, 3));
                 }

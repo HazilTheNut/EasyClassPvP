@@ -63,7 +63,6 @@ public class GameManager {
         // CLASS REGISTRY
         // put class into the map here to register it for use!
 
-
         classMap.put("Vanguard", new VanguardClass());
         classMap.put("Spectre", new SpectreClass());
         classMap.put("Ranger", new RangerClass());
@@ -74,6 +73,7 @@ public class GameManager {
         classMap.put("Griefer", new GrieferClass());
         classMap.put("Eclipse", new EclipseClass());
         classMap.put("Cultist", new CultistClass());
+        classMap.put("Artificer", new ArtificerClass());
         classMap.put("AstralMage", new AstralMageClass());
 
         // END / MISC. STUFF BELOW
@@ -301,7 +301,9 @@ public class GameManager {
         gamePlayer.getPlayer().getWorld().spawnParticle(Particle.LAVA, gamePlayer.getPlayer().getLocation(), 10, .2, .2, .2, 0);
         gamePlayer.getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, gamePlayer.getPlayer().getLocation(), 10, .2, .2, .2, 0.1);
         gamePlayer.getPlayer().getWorld().playSound(gamePlayer.getPlayer().getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 1f, 1f);
-        gamePlayer.getPlayer().teleport(gamePlayer.gameSpawn);
+        if (redTeam.hasEntry(gamePlayer.getPlayerName()))  gamePlayer.getPlayer().teleport(redSpawn);
+        else if (blueTeam.hasEntry(gamePlayer.getPlayerName())) gamePlayer.getPlayer().teleport(blueSpawn);
+        else gamePlayer.getPlayer().teleport(gamePlayer.gameSpawn);
         gamePlayer.getPickedClass().loadKit();
         gamePlayer.getPlayer().setHealth(20);
         gamePlayer.getPlayer().setInvulnerable(false);
@@ -584,5 +586,9 @@ public class GameManager {
             mapName = map;
         }
     }
+
+    public Location getRedSpawn() {return redSpawn; }
+
+    public Location getBlueSpawn() {return blueSpawn; }
 }
 

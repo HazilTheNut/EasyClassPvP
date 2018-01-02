@@ -59,7 +59,7 @@ public class CultistClass extends PvPClass {
             if (lifePoolTimer <= 0) {
                 Entity[] ents = getNearbyEntities(player.getLocation(), 3.5);
                 for (Entity e : ents){
-                    if (!manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName())) && e instanceof LivingEntity){
+                    if (!manager.isOnOtherTeam(e, getGamePlayer()) && e instanceof LivingEntity){
                         LivingEntity toHeal = (LivingEntity) e;
                         toHeal.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 15, 3));
                     }
@@ -124,6 +124,7 @@ public class CultistClass extends PvPClass {
                     }
                 }
             }
+            if (!rayLoc.getBlock().getType().equals(Material.AIR)) break;
             if (searchSuccess) break;
         }
         if (!searchSuccess) ability2_cd = 1f;

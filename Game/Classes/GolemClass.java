@@ -121,11 +121,13 @@ public class GolemClass extends PvPClass {
             if (laserLoc.getWorld().getNearbyEntities(laserLoc, 0.4f, 0.4f, 0.4f).size() > 0){
                 Collection<Entity> hitList = laserLoc.getWorld().getNearbyEntities(laserLoc, .4f, .4f, .4f);
                 for (Entity e : hitList){
-                    if (manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName()))){
+                    if (manager.isOnOtherTeam(e, getGamePlayer())){
                         caughtEntity = e;
                         break;
                     }
                 }
+            } else if (!laserLoc.getBlock().getType().equals(Material.AIR)) { //When it hits something
+                break;
             } else {
                 laserLoc.getWorld().spawnParticle(Particle.CRIT_MAGIC, laserLoc, 2, 0, 0, 0, 0);
             }

@@ -60,7 +60,7 @@ public class RangerClass extends PvPClass {
             if (unluckyEntities.length > 0) {
                 ArrayList<Entity> sortedEntities = new ArrayList<>();
                 for (Entity e : unluckyEntities) {
-                    if (manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName()))) {
+                    if (manager.isOnOtherTeam(e, getGamePlayer())) {
                         sortedEntities.add(e);
                     }
                 }

@@ -132,7 +132,7 @@ public class GeomancerClass extends PvPClass {
         if (dealDamage) {
             Entity[] hitList = getNearbyEntities(loc, 1);
             for (Entity e : hitList) {
-                if (manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName())) && e instanceof LivingEntity) {
+                if (manager.isOnOtherTeam(e, getGamePlayer()) && e instanceof LivingEntity) {
                     ((LivingEntity) e).damage(4);
                     ((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 0));
                 }

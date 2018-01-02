@@ -108,7 +108,7 @@ public class AstralMageClass extends PvPClass {
                 laserLoc.getWorld().playSound(laserLoc, Sound.ENTITY_GENERIC_EXPLODE, 3f, 0.8f);
                 Collection<Entity> hitList = laserLoc.getWorld().getNearbyEntities(laserLoc, 1, 1, 1);
                 for (Entity e : hitList){
-                    if (manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName())) && e instanceof Damageable){
+                    if (manager.isOnOtherTeam(e, getGamePlayer()) && e instanceof Damageable){
                         Damageable dmgE = (Damageable)e;
                         dmgE.damage(3);
                     }

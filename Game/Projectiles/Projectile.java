@@ -17,13 +17,15 @@ public class Projectile {
     public int travelDist;
     public Team creatorTeam;
 
-    private Vector travelVector;
+    Vector travelVector;
 
     public Projectile(Location start){
         loc = start;
         loc.setY(loc.getY()-0.2f);
         travelVector = loc.getDirection().normalize();
     }
+
+    public Projectile(){} //For special uses
 
     public void move(){
         loc.add(travelVector);

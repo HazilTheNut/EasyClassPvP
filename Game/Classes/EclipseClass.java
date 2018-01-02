@@ -114,7 +114,7 @@ public class EclipseClass extends PvPClass {
             if (nearList.length > 1){
                 boolean foundEnemy = false;
                 for (Entity e : nearList){
-                    if (e instanceof LivingEntity && manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName()))){
+                    if (e instanceof LivingEntity && manager.isOnOtherTeam(e, getGamePlayer())){
                         ((LivingEntity) e).damage(4f);
                         foundEnemy = true;
                     }
@@ -185,7 +185,7 @@ public class EclipseClass extends PvPClass {
                 ArrayList<Entity> hitList = (ArrayList<Entity>)rayLoc.getWorld().getNearbyEntities(rayLoc, .4, .4, .4);
                 if (hitList.size() > 0){
                     for (Entity e : hitList){
-                        if (e instanceof LivingEntity && manager.isOnOtherTeam(e, manager.getPlayerFromRoster(player.getName()))) {
+                        if (e instanceof LivingEntity && manager.isOnOtherTeam(e, getGamePlayer())) {
                             player.getWorld().spawnParticle(Particle.SMOKE_NORMAL, player.getLocation(), 50, .3, .4, .3, 0);
                             player.teleport(e.getLocation().setDirection(rayLoc.getDirection()));
                             ((LivingEntity) e).damage(2);

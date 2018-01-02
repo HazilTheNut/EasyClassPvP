@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -19,7 +20,7 @@ import java.util.Collection;
  * Created by Jared on 3/11/2017.
  */
 public class PvPClass {
-    public float ability1_cd = 0f;
+    public float ability1_cd = 0f;//Current ability cooldowns
     public float ability2_cd = 0f;
     float ability1_setcd = 3f; //Stats that define ability cooldown
     float ability2_setcd = 3f;
@@ -42,7 +43,7 @@ public class PvPClass {
     ItemStack weapon = new ItemStack(Material.WOOD_SWORD); //Override with new ones
     ItemStack ability1Icon = new ItemStack(Material.STICK); // ^
     ItemStack ability2Icon = new ItemStack(Material.STICK); // ^
-    public Material classIcon = Material.IRON_SWORD;
+    public Material classIcon = Material.SHIELD;
 
     void specialTick(){ /* Special code ran for different classes */ }
 
@@ -109,6 +110,8 @@ public class PvPClass {
     public void setPlayer(Player set){ player = set; }
 
     public void setManager(GameManager gameManager) {manager = gameManager;}
+
+    GamePlayer getGamePlayer(){ return manager.getPlayerFromRoster(player.getName()); }
 
     public void loadKit(){
         player.removePotionEffect(PotionEffectType.INVISIBILITY);
@@ -240,5 +243,11 @@ public class PvPClass {
             }
         }
         return finalList;
+    }
+
+    protected void damageEnemy(Entity target, double amount){
+        if( target != null && target instanceof LivingEntity){
+            ((LivingEntity) target).damage(amount);
+        }
     }
 }
